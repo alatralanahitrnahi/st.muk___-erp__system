@@ -1,0 +1,59 @@
+{
+  "name": "PVGS ERP Laravel Development",
+  "image": "mcr.microsoft.com/devcontainers/php:1-8.2-bullseye",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "MehediDracula.php-namespace-resolver",
+        "onecentlin.laravel-blade",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "ryannaddy.laravel-artisan",
+        "kilo-code.kilo-code",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "editorconfig.editorconfig",
+        "mikestead.dotenv",
+        "eamodio.gitlens",
+        "cweijan.vscode-mysql-client2"
+      ],
+      
+      "settings": {
+        "php.suggest.basic": false,
+        "intelephense.environment.phpVersion": "8.2",
+        "editor.formatOnSave": true,
+        "files.associations": {
+          "*.blade.php": "blade"
+        }
+      }
+    }
+  },
+
+  "forwardPorts": [8000, 3306, 5173],
+  
+  "portsAttributes": {
+    "8000": {
+      "label": "Laravel Application",
+      "onAutoForward": "notify"
+    },
+    "3306": {
+      "label": "MySQL Database"
+    }
+  },
+
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  
+  "remoteUser": "vscode"
+}
