@@ -53,7 +53,8 @@ class User extends Authenticatable
 
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, 'user_permissions'); // Note: This table doesn't exist, permissions are through roles
+        // Get permissions through roles only - no direct user permissions
+        return $this->roles()->with('permissions')->get()->pluck('permissions')->flatten();
     }
 
     public function hasRole($role)
@@ -63,11 +64,7 @@ class User extends Authenticatable
 
     public function hasPermission($permission)
     {
-        // Check if user has permission directly or through roles
-        if ($this->permissions()->where('name', $permission)->exists()) {
-            return true;
-        }
-
+        // Check permissions through roles only
         return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
             $query->where('name', $permission);
         })->exists();
@@ -78,8 +75,8 @@ class User extends Authenticatable
         if (is_string($role)) {
             $role = Role::where('name', $role)->first();
         }
-        if ($role) {
-            $this->roles()->attach($role);
+        if ($role && !$this->hasRole($role->name)) {
+            $this->roles()->attach($role->id);
         }
     }
 

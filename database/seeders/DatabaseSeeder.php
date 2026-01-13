@@ -70,10 +70,11 @@ class DatabaseSeeder extends Seeder
             'is_current' => true
         ]);
 
-        // Create roles
+        // Create roles - renamed admin to registrar to avoid confusion
         $roles = [
             'super-admin',
-            'admin',
+            'principal',
+            'registrar',  // Changed from 'admin' to avoid developer confusion
             'faculty',
             'student',
         ];
@@ -113,7 +114,7 @@ class DatabaseSeeder extends Seeder
         // Assign permissions to roles
         $rolePermissions = [
             'super-admin' => $permissions, // all permissions
-            'admin' => [
+            'principal' => [
                 'view students', 'create students', 'edit students', 'delete students',
                 'view programs', 'create programs', 'edit programs', 'delete programs',
                 'view subjects', 'create subjects', 'edit subjects', 'delete subjects',
@@ -122,19 +123,23 @@ class DatabaseSeeder extends Seeder
                 'view fees', 'manage fees',
                 'view reports', 'generate reports',
             ],
+            'registrar' => [  // Renamed from 'admin'
+                'view students', 'create students', 'edit students',
+                'view programs', 'view subjects',
+                'view attendance', 'mark attendance',
+                'view results', 'enter results',
+                'view fees', 'manage fees',
+                'view reports', 'generate reports',
+            ],
             'faculty' => [
                 'view students',
-                'view programs',
-                'view subjects',
+                'view programs', 'view subjects',
                 'view attendance', 'mark attendance',
                 'view results', 'enter results',
             ],
             'student' => [
-                'view programs',
-                'view subjects',
-                'view attendance',
-                'view results',
-                'view fees',
+                'view programs', 'view subjects',
+                'view attendance', 'view results', 'view fees',
             ],
         ];
 

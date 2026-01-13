@@ -1,0 +1,193 @@
+                <!-- Holiday Management -->
+                <div x-show="currentView === 'holidays'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Holiday Management</h2>
+                        <p class="text-gray-600">Manage institutional holidays and makeup classes</p>
+                    </div>
+                    
+                    <!-- Holiday Calendar Overview -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-red-100 rounded-lg">
+                                    <span class="text-2xl">🇮🇳</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">National Holidays</h3>
+                                    <p class="text-2xl font-bold text-gray-900">3</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-orange-100 rounded-lg">
+                                    <span class="text-2xl">⚠️</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Pending Approvals</h3>
+                                    <p class="text-2xl font-bold text-gray-900">2</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-blue-100 rounded-lg">
+                                    <span class="text-2xl">🔄</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Makeup Classes</h3>
+                                    <p class="text-2xl font-bold text-gray-900">8</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="mb-6">
+                        <div class="border-b border-gray-200">
+                            <nav class="-mb-px flex space-x-8">
+                                <button @click="holidayTab = 'calendar'" :class="holidayTab === 'calendar' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                                    Holiday Calendar
+                                </button>
+                                <button @click="holidayTab = 'pending'" :class="holidayTab === 'pending' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                                    Pending Approvals
+                                </button>
+                                <button @click="holidayTab = 'makeup'" :class="holidayTab === 'makeup' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                                    Makeup Classes
+                                </button>
+                                <button @click="holidayTab = 'conflicts'" :class="holidayTab === 'conflicts' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                                    Holiday Conflicts
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Holiday Calendar Tab -->
+                    <div x-show="holidayTab === 'calendar'">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-lg font-semibold">Academic Year 2024-25 Holidays</h3>
+                                    <button @click="showAddHoliday = true" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 text-sm">
+                                        Add Holiday
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Holiday</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Impact</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <template x-for="holiday in holidayList" :key="holiday.id">
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm font-medium text-gray-900" x-text="holiday.name"></div>
+                                                    <div class="text-sm text-gray-500" x-text="holiday.description"></div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="holiday.date"></td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span :class="getHolidayTypeClass(holiday.type)" class="px-2 py-1 text-xs rounded-full" x-text="holiday.type"></span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span :class="holiday.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'" class="px-2 py-1 text-xs rounded-full" x-text="holiday.status"></span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="holiday.classesAffected + ' classes'"></td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <button @click="viewHolidayDetails(holiday.id)" class="text-purple-600 hover:text-purple-900 mr-3">View</button>
+                                                    <button x-show="holiday.status === 'pending'" @click="approveHoliday(holiday.id)" class="text-green-600 hover:text-green-900">Approve</button>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Approvals Tab -->
+                    <div x-show="holidayTab === 'pending'">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-lg font-semibold">Holidays Requiring Approval</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-4">
+                                    <div class="border border-orange-200 rounded-lg p-4 bg-orange-50">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-medium text-orange-900">Faculty Development Program</h4>
+                                                <p class="text-sm text-orange-700">September 15, 2024 • Institutional</p>
+                                                <p class="text-sm text-orange-600 mt-1">Mandatory FDP - No classes. Affects 15 classes across all departments.</p>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button @click="approveHoliday(14)" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                                    Approve
+                                                </button>
+                                                <button @click="rejectHoliday(14)" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                                    Reject
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border border-orange-200 rounded-lg p-4 bg-orange-50">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-medium text-orange-900">Sports Day</h4>
+                                                <p class="text-sm text-orange-700">December 10, 2024 • Institutional</p>
+                                                <p class="text-sm text-orange-600 mt-1">Annual sports event. Affects 12 classes, makeup required.</p>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button @click="approveHoliday(15)" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                                    Approve
+                                                </button>
+                                                <button @click="rejectHoliday(15)" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                                    Reject
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Holiday Conflicts Tab -->
+                    <div x-show="holidayTab === 'conflicts'">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-lg font-semibold">Holiday-Related Conflicts</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-4">
+                                    <template x-for="conflict in holidayConflicts" :key="conflict.id">
+                                        <div :class="conflict.severity === 'critical' ? 'border-red-200 bg-red-50' : conflict.severity === 'warning' ? 'border-yellow-200 bg-yellow-50' : 'border-blue-200 bg-blue-50'" class="border rounded-lg p-4">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <h4 :class="conflict.severity === 'critical' ? 'text-red-900' : conflict.severity === 'warning' ? 'text-yellow-900' : 'text-blue-900'" class="font-medium" x-text="conflict.title"></h4>
+                                                    <p :class="conflict.severity === 'critical' ? 'text-red-700' : conflict.severity === 'warning' ? 'text-yellow-700' : 'text-blue-700'" class="text-sm mt-1" x-text="conflict.description"></p>
+                                                    <p :class="conflict.severity === 'critical' ? 'text-red-600' : conflict.severity === 'warning' ? 'text-yellow-600' : 'text-blue-600'" class="text-xs mt-2" x-text="'Impact: ' + conflict.impact"></p>
+                                                </div>
+                                                <div class="flex space-x-2">
+                                                    <button @click="resolveHolidayConflict(conflict.id)" :class="conflict.severity === 'critical' ? 'bg-red-600 hover:bg-red-700' : conflict.severity === 'warning' ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-blue-600 hover:bg-blue-700'" class="text-white px-3 py-1 rounded text-sm">
+                                                        Resolve
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>

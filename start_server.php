@@ -1,0 +1,1 @@
+<?php\n$port = 8080;\necho \"Starting server on http://localhost:$port\\n\";\necho \"Access admin panel: http://localhost:$port/admin.html\\n\";\necho \"Press Ctrl+C to stop\\n\\n\";\n\n// Start PHP built-in server\npassthru(\"php -S localhost:$port -t public/\");\n?>

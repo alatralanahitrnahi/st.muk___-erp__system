@@ -7,385 +7,512 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50">
     <div x-data="facultyPortal()" class="min-h-screen">
-        <!-- Navigation -->
-        <nav class="bg-purple-600 text-white p-4">
-            <div class="flex justify-between items-center">
-                <h1 class="text-xl font-bold">PVGS Faculty Portal</h1>
-                <div class="flex items-center space-x-4">
-                    <span x-text="faculty.name"></span>
-                    <button @click="logout()" class="bg-red-500 px-3 py-1 rounded">Logout</button>
+        <!-- Top Navigation -->
+        <nav class="bg-green-600 text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="text-xl font-bold">👨🏫 PVGS Faculty Portal</h1>
+                        <span class="text-green-200 text-sm">Academic Management System</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm">👤 <span x-text="user.name"></span> - <span x-text="user.department"></span></span>
+                        <button @click="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm transition-colors">
+                            Logout
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>
 
-        <div class="container mx-auto px-4 py-6">
-            <!-- Tabs -->
-            <div class="bg-white rounded-lg shadow mb-6">
-                <div class="border-b border-gray-200">
-                    <nav class="flex space-x-8 px-6">
-                        <button @click="activeTab = 'attendance'" 
-                                :class="activeTab === 'attendance' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500'"
-                                class="py-4 px-1 border-b-2 font-medium text-sm">
-                            Mark Attendance
-                        </button>
-                        <button @click="activeTab = 'results'" 
-                                :class="activeTab === 'results' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500'"
-                                class="py-4 px-1 border-b-2 font-medium text-sm">
-                            Enter Results
-                        </button>
-                        <button @click="activeTab = 'reports'" 
-                                :class="activeTab === 'reports' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500'"
-                                class="py-4 px-1 border-b-2 font-medium text-sm">
-                            Reports
-                        </button>
-                    </nav>
-                </div>
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-white shadow-lg min-h-screen">
+                <nav class="p-4">
+                    <ul class="space-y-2">
+                        <li><a @click="currentView = 'dashboard'" :class="currentView === 'dashboard' ? 'bg-green-100 text-green-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📊 <span class="ml-2">Dashboard</span>
+                        </a></li>
+                        <li><a @click="currentView = 'classes'" :class="currentView === 'classes' ? 'bg-green-100 text-green-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📚 <span class="ml-2">My Classes</span>
+                        </a></li>
+                        <li><a @click="currentView = 'attendance'" :class="currentView === 'attendance' ? 'bg-green-100 text-green-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📅 <span class="ml-2">Attendance</span>
+                        </a></li>
+                        <li><a @click="currentView = 'results'" :class="currentView === 'results' ? 'bg-green-100 text-green-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📊 <span class="ml-2">Results Entry</span>
+                        </a></li>
+                        <li><a @click="currentView = 'timetable'" :class="currentView === 'timetable' ? 'bg-green-100 text-green-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🕐 <span class="ml-2">My Timetable</span>
+                        </a></li>
+                    </ul>
+                </nav>
+            </aside>
 
-                <div class="p-6">
-                    <!-- Attendance Tab -->
-                    <div x-show="activeTab === 'attendance'">
-                        <h3 class="text-lg font-semibold mb-4">Mark Attendance</h3>
-                        
-                        <!-- Attendance Form -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Subject</label>
-                                <select x-model="attendanceForm.subject_id" @change="loadStudentsForAttendance()" 
-                                        class="mt-1 block w-full border-gray-300 rounded-md">
-                                    <option value="">Select Subject</option>
-                                    <template x-for="subject in subjects" :key="subject.id">
-                                        <option :value="subject.id" x-text="subject.name"></option>
-                                    </template>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Date</label>
-                                <input type="date" x-model="attendanceForm.attendance_date" 
-                                       class="mt-1 block w-full border-gray-300 rounded-md">
-                            </div>
-                            <div class="flex items-end">
-                                <button @click="markAllPresent()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
-                                    Mark All Present
-                                </button>
+            <!-- Main Content -->
+            <main class="flex-1 p-6">
+                <!-- Dashboard -->
+                <div x-show="currentView === 'dashboard'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Faculty Dashboard</h2>
+                        <p class="text-gray-600">Welcome back, <span x-text="user.name"></span></p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-blue-100 rounded-lg">
+                                    <span class="text-2xl">📚</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">My Subjects</h3>
+                                    <p class="text-2xl font-bold text-gray-900" x-text="mySubjects.length"></p>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Student List -->
-                        <div x-show="studentsForAttendance.length > 0" class="bg-white border rounded-lg">
-                            <div class="px-4 py-3 border-b bg-gray-50">
-                                <h4 class="font-medium">Students</h4>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-green-100 rounded-lg">
+                                    <span class="text-2xl">👥</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Total Students</h3>
+                                    <p class="text-2xl font-bold text-gray-900">156</p>
+                                </div>
                             </div>
-                            <div class="divide-y divide-gray-200">
-                                <template x-for="(student, index) in studentsForAttendance" :key="student.id">
-                                    <div class="px-4 py-3 flex items-center justify-between">
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-orange-100 rounded-lg">
+                                    <span class="text-2xl">📝</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Pending Results</h3>
+                                    <p class="text-2xl font-bold text-gray-900">8</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Today's Schedule -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold">Today's Schedule</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-3">
+                                <template x-for="schedule in todaySchedule" :key="schedule.id">
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                         <div>
-                                            <p class="font-medium" x-text="student.name"></p>
-                                            <p class="text-sm text-gray-500" x-text="student.admission_number"></p>
+                                            <div class="font-medium" x-text="schedule.subject"></div>
+                                            <div class="text-sm text-gray-600" x-text="schedule.class + ' - ' + schedule.type"></div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="font-medium" x-text="schedule.time"></div>
+                                            <div class="text-sm text-gray-600" x-text="schedule.room"></div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Classes -->
+                <div x-show="currentView === 'classes'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">My Classes</h2>
+                        <p class="text-gray-600">BSc Computer Science subjects assigned to you</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <template x-for="subject in mySubjects" :key="subject.id">
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                                <div class="p-6">
+                                    <div class="flex items-start justify-between mb-4">
+                                        <div>
+                                            <h3 class="text-lg font-semibold" x-text="subject.name"></h3>
+                                            <p class="text-gray-600" x-text="subject.code + ' - ' + subject.class"></p>
+                                            <p class="text-sm text-gray-500" x-text="subject.type + ' | ' + subject.credits + ' Credits'"></p>
+                                        </div>
+                                        <span :class="subject.type === 'Theory' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'" class="px-2 py-1 text-xs rounded-full" x-text="subject.type"></span>
+                                    </div>
+                                    
+                                    <div class="space-y-2 mb-4">
+                                        <div class="flex justify-between text-sm">
+                                            <span>Students Enrolled:</span>
+                                            <span x-text="subject.students"></span>
+                                        </div>
+                                        <div class="flex justify-between text-sm">
+                                            <span>Classes Completed:</span>
+                                            <span x-text="subject.completed + '/' + subject.total"></span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-green-600 h-2 rounded-full" :style="'width: ' + (subject.completed/subject.total*100) + '%'"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex space-x-2">
+                                        <button @click="markAttendance(subject.id)" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                            Mark Attendance
+                                        </button>
+                                        <button @click="enterResults(subject.id)" class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                            Enter Results
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Attendance -->
+                <div x-show="currentView === 'attendance'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Mark Attendance</h2>
+                        <p class="text-gray-600">Record student attendance for your classes</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                    <select x-model="attendanceForm.subject_id" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                        <option value="">Select Subject</option>
+                                        <template x-for="subject in mySubjects" :key="subject.id">
+                                            <option :value="subject.id" x-text="subject.name + ' (' + subject.class + ')'"></option>
+                                        </template>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                                    <input type="date" x-model="attendanceForm.date" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Period</label>
+                                    <select x-model="attendanceForm.period" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                        <option value="1">Period 1 (9:00-10:00)</option>
+                                        <option value="2">Period 2 (10:00-11:00)</option>
+                                        <option value="3">Period 3 (11:15-12:15)</option>
+                                        <option value="4">Period 4 (12:15-1:15)</option>
+                                        <option value="5">Period 5 (2:00-3:00)</option>
+                                        <option value="6">Period 6 (3:00-4:00)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6" x-show="attendanceForm.subject_id">
+                            <div class="mb-4 flex justify-between items-center">
+                                <h3 class="text-lg font-semibold">Student List</h3>
+                                <div class="space-x-2">
+                                    <button @click="markAllPresent()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                        Mark All Present
+                                    </button>
+                                    <button @click="markAllAbsent()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm">
+                                        Mark All Absent
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <template x-for="student in students.slice(0, 20)" :key="student.id">
+                                    <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                                        <div class="flex items-center">
+                                            <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                                <span class="text-blue-600 font-medium text-sm" x-text="student.name.charAt(0)"></span>
+                                            </div>
+                                            <div>
+                                                <div class="font-medium text-sm" x-text="student.name"></div>
+                                                <div class="text-xs text-gray-500" x-text="student.roll_no"></div>
+                                            </div>
                                         </div>
                                         <div class="flex space-x-2">
-                                            <label class="flex items-center">
-                                                <input type="radio" :name="`attendance_${student.id}`" value="present" 
-                                                       x-model="student.status" class="mr-1">
-                                                <span class="text-green-600">Present</span>
-                                            </label>
-                                            <label class="flex items-center">
-                                                <input type="radio" :name="`attendance_${student.id}`" value="absent" 
-                                                       x-model="student.status" class="mr-1">
-                                                <span class="text-red-600">Absent</span>
-                                            </label>
-                                            <label class="flex items-center">
-                                                <input type="radio" :name="`attendance_${student.id}`" value="late" 
-                                                       x-model="student.status" class="mr-1">
-                                                <span class="text-yellow-600">Late</span>
-                                            </label>
+                                            <button @click="student.attendance = 'present'" :class="student.attendance === 'present' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'" class="px-3 py-1 rounded text-xs">
+                                                P
+                                            </button>
+                                            <button @click="student.attendance = 'absent'" :class="student.attendance === 'absent' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700'" class="px-3 py-1 rounded text-xs">
+                                                A
+                                            </button>
                                         </div>
                                     </div>
                                 </template>
                             </div>
-                            <div class="px-4 py-3 border-t bg-gray-50">
-                                <button @click="submitAttendance()" class="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700">
-                                    Submit Attendance
+                            
+                            <div class="mt-6 flex justify-end">
+                                <button @click="saveAttendance()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Save Attendance
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Results Tab -->
-                    <div x-show="activeTab === 'results'">
-                        <h3 class="text-lg font-semibold mb-4">Enter Results</h3>
-                        
-                        <!-- Results Form -->
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Subject</label>
-                                <select x-model="resultsForm.subject_id" @change="loadStudentsForResults()" 
-                                        class="mt-1 block w-full border-gray-300 rounded-md">
-                                    <option value="">Select Subject</option>
-                                    <template x-for="subject in subjects" :key="subject.id">
-                                        <option :value="subject.id" x-text="subject.name"></option>
-                                    </template>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Exam Type</label>
-                                <select x-model="resultsForm.exam_type" class="mt-1 block w-full border-gray-300 rounded-md">
-                                    <option value="internal">Internal</option>
-                                    <option value="external">External</option>
-                                    <option value="practical">Practical</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Max Marks</label>
-                                <input type="number" x-model="resultsForm.max_marks" 
-                                       class="mt-1 block w-full border-gray-300 rounded-md">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Academic Year</label>
-                                <input type="text" x-model="resultsForm.academic_year" placeholder="2024-25"
-                                       class="mt-1 block w-full border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <!-- Student Results -->
-                        <div x-show="studentsForResults.length > 0" class="bg-white border rounded-lg">
-                            <div class="px-4 py-3 border-b bg-gray-50">
-                                <h4 class="font-medium">Enter Marks</h4>
-                            </div>
-                            <div class="divide-y divide-gray-200">
-                                <template x-for="student in studentsForResults" :key="student.id">
-                                    <div class="px-4 py-3 flex items-center justify-between">
-                                        <div>
-                                            <p class="font-medium" x-text="student.name"></p>
-                                            <p class="text-sm text-gray-500" x-text="student.admission_number"></p>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <input type="number" x-model="student.marks_obtained" 
-                                                   :max="resultsForm.max_marks" min="0"
-                                                   class="w-20 border-gray-300 rounded-md text-center"
-                                                   placeholder="Marks">
-                                            <span class="text-gray-500">/ <span x-text="resultsForm.max_marks"></span></span>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                            <div class="px-4 py-3 border-t bg-gray-50">
-                                <button @click="submitResults()" class="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700">
-                                    Submit Results
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Reports Tab -->
-                    <div x-show="activeTab === 'reports'">
-                        <h3 class="text-lg font-semibold mb-4">Class Reports</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Attendance Report -->
-                            <div class="bg-white p-6 rounded-lg border">
-                                <h4 class="font-medium mb-4">Attendance Summary</h4>
-                                <template x-for="report in attendanceReports" :key="report.subject_id">
-                                    <div class="mb-3 p-3 bg-gray-50 rounded">
-                                        <p class="font-medium" x-text="report.subject_name"></p>
-                                        <p class="text-sm text-gray-600">Average: <span x-text="report.average_percentage"></span>%</p>
-                                        <div class="mt-1 bg-gray-200 rounded-full h-2">
-                                            <div class="bg-green-600 h-2 rounded-full" :style="`width: ${report.average_percentage}%`"></div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-
-                            <!-- Results Summary -->
-                            <div class="bg-white p-6 rounded-lg border">
-                                <h4 class="font-medium mb-4">Results Summary</h4>
-                                <template x-for="report in resultsReports" :key="report.subject_id">
-                                    <div class="mb-3 p-3 bg-gray-50 rounded">
-                                        <p class="font-medium" x-text="report.subject_name"></p>
-                                        <p class="text-sm text-gray-600">
-                                            Pass Rate: <span x-text="report.pass_percentage"></span>%
-                                        </p>
-                                        <p class="text-sm text-gray-600">
-                                            Class Average: <span x-text="report.class_average"></span>%
-                                        </p>
-                                    </div>
-                                </template>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <!-- Timetable View -->
+                <div x-show="currentView === 'timetable'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">My Timetable</h2>
+                        <p class="text-gray-600">Your weekly teaching schedule</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-semibold">Weekly Schedule</h3>
+                                <div class="text-sm text-gray-600">Total: 22 hours/week</div>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monday</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tuesday</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Wednesday</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thursday</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-gray-900">09:00-10:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-blue-50 rounded border-l-2 border-blue-400">Data Structures<br>SY BSc CS<br>Room 201</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-blue-50 rounded border-l-2 border-blue-400">Web Development<br>TY BSc CS<br>Room 301</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-gray-900">10:00-11:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-blue-50 rounded border-l-2 border-blue-400">Data Structures<br>SY BSc CS<br>Room 201</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-blue-50 rounded border-l-2 border-blue-400">Data Structures<br>SY BSc CS<br>Room 201</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-gray-900">11:00-12:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-blue-50 rounded border-l-2 border-blue-400">DBMS<br>TY BSc CS<br>Room 301</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-green-50 rounded border-l-2 border-green-400">DS Lab<br>SY BSc CS<br>Computer Lab 1</div></td>
+                                    </tr>
+                                    <tr class="bg-yellow-50">
+                                        <td class="px-4 py-3 font-medium text-gray-900">12:00-13:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs text-center text-yellow-600 font-medium">LUNCH BREAK</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-center text-yellow-600 font-medium">LUNCH BREAK</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-center text-yellow-600 font-medium">LUNCH BREAK</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-center text-yellow-600 font-medium">LUNCH BREAK</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-green-50 rounded border-l-2 border-green-400">DS Lab<br>SY BSc CS<br>Computer Lab 1</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-gray-900">13:00-14:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-blue-50 rounded border-l-2 border-blue-400">DBMS<br>TY BSc CS<br>Room 301</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-gray-900">14:00-15:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-green-50 rounded border-l-2 border-green-400">DS Lab<br>SY BSc CS<br>Computer Lab 1</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-green-50 rounded border-l-2 border-green-400">DBMS Lab<br>TY BSc CS<br>Computer Lab 2</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-gray-900">15:00-16:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-green-50 rounded border-l-2 border-green-400">DS Lab<br>SY BSc CS<br>Computer Lab 1</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-green-50 rounded border-l-2 border-green-400">DBMS Lab<br>TY BSc CS<br>Computer Lab 2</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-green-50 rounded border-l-2 border-green-400">Web Dev Lab<br>TY BSc CS<br>Computer Lab 2</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-gray-900">16:00-17:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-green-50 rounded border-l-2 border-green-400">Web Dev Lab<br>TY BSc CS<br>Computer Lab 2</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-gray-900">17:00-18:00</td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs p-2 bg-blue-50 rounded border-l-2 border-blue-400">Web Development<br>TY BSc CS<br>Room 301</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                        <td class="px-4 py-3"><div class="text-xs text-gray-400">Free</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t">
+                            <div class="flex items-center justify-between text-sm">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-blue-400 rounded mr-2"></div>
+                                        <span>Theory Classes</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-green-400 rounded mr-2"></div>
+                                        <span>Practical/Lab</span>
+                                    </div>
+                                </div>
+                                <div class="text-gray-600">Weekly Load: 22 hours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div x-show="currentView === 'students'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">My Students</h2>
+                        <p class="text-gray-600">BSc Computer Science students in your classes</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-semibold">Student List</h3>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">156 Students</span>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performance</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <template x-for="student in students.slice(0, 15)" :key="student.id">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                                        <span class="text-blue-600 font-medium" x-text="student.name.charAt(0)"></span>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900" x-text="student.name"></div>
+                                                        <div class="text-sm text-gray-500" x-text="student.roll_no"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="student.class"></td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span :class="student.attendance_percent >= 75 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'" class="px-2 py-1 text-xs rounded-full" x-text="student.attendance_percent + '%'"></span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span :class="student.grade === 'A+' || student.grade === 'A' ? 'bg-green-100 text-green-800' : student.grade === 'B+' || student.grade === 'B' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800'" class="px-2 py-1 text-xs rounded-full" x-text="student.grade"></span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button @click="viewStudentProfile(student.id)" class="text-blue-600 hover:text-blue-900">View Profile</button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
     <script>
         function facultyPortal() {
             return {
-                activeTab: 'attendance',
-                faculty: { name: 'Faculty User' },
-                subjects: [],
-                studentsForAttendance: [],
-                studentsForResults: [],
-                attendanceReports: [],
-                resultsReports: [],
+                currentView: 'dashboard',
+                user: {
+                    name: 'Dr. Rajesh Kumar',
+                    department: 'Computer Science',
+                    employee_id: 'FAC001'
+                },
+                mySubjects: [
+                    { id: 1, name: 'Data Structures', code: 'CS201', class: 'SY BSc CS', type: 'Theory', credits: 4, students: 52, completed: 28, total: 45 },
+                    { id: 2, name: 'Data Structures Lab', code: 'CS201P', class: 'SY BSc CS', type: 'Practical', credits: 2, students: 52, completed: 12, total: 15 },
+                    { id: 3, name: 'Database Management', code: 'CS301', class: 'TY BSc CS', type: 'Theory', credits: 4, students: 48, completed: 32, total: 45 },
+                    { id: 4, name: 'DBMS Lab', code: 'CS301P', class: 'TY BSc CS', type: 'Practical', credits: 2, students: 48, completed: 14, total: 15 },
+                    { id: 5, name: 'Web Development', code: 'CS302', class: 'TY BSc CS', type: 'Theory', credits: 4, students: 48, completed: 25, total: 45 },
+                    { id: 6, name: 'Web Development Lab', code: 'CS302P', class: 'TY BSc CS', type: 'Practical', credits: 2, students: 48, completed: 10, total: 15 }
+                ],
+                todaySchedule: [
+                    { id: 1, subject: 'Data Structures', class: 'SY BSc CS', type: 'Theory', time: '9:00 - 10:00 AM', room: 'Room 201' },
+                    { id: 2, subject: 'DBMS Lab', class: 'TY BSc CS', type: 'Practical', time: '11:15 AM - 1:15 PM', room: 'Computer Lab 1' },
+                    { id: 3, subject: 'Web Development', class: 'TY BSc CS', type: 'Theory', time: '2:00 - 3:00 PM', room: 'Room 301' }
+                ],
+                students: [
+                    { id: 1, name: 'Aarav Sharma', roll_no: 'CS2101', class: 'SY BSc CS', attendance_percent: 85, grade: 'A', attendance: 'present' },
+                    { id: 2, name: 'Vivaan Patel', roll_no: 'CS2102', class: 'SY BSc CS', attendance_percent: 92, grade: 'A+', attendance: 'present' },
+                    { id: 3, name: 'Aditya Kumar', roll_no: 'CS2103', class: 'SY BSc CS', attendance_percent: 78, grade: 'B+', attendance: 'present' },
+                    { id: 4, name: 'Vihaan Singh', roll_no: 'CS2104', class: 'SY BSc CS', attendance_percent: 88, grade: 'A', attendance: 'present' },
+                    { id: 5, name: 'Arjun Gupta', roll_no: 'CS2105', class: 'SY BSc CS', attendance_percent: 65, grade: 'C+', attendance: 'absent' },
+                    { id: 6, name: 'Sai Reddy', roll_no: 'CS2106', class: 'SY BSc CS', attendance_percent: 90, grade: 'A', attendance: 'present' },
+                    { id: 7, name: 'Reyansh Joshi', roll_no: 'CS2107', class: 'SY BSc CS', attendance_percent: 82, grade: 'B+', attendance: 'present' },
+                    { id: 8, name: 'Ayaan Shah', roll_no: 'CS2108', class: 'SY BSc CS', attendance_percent: 95, grade: 'A+', attendance: 'present' },
+                    { id: 9, name: 'Krishna Nair', roll_no: 'CS2109', class: 'SY BSc CS', attendance_percent: 73, grade: 'B', attendance: 'present' },
+                    { id: 10, name: 'Ishaan Mehta', roll_no: 'CS2110', class: 'SY BSc CS', attendance_percent: 87, grade: 'A', attendance: 'present' },
+                    { id: 11, name: 'Priya Sharma', roll_no: 'CS3101', class: 'TY BSc CS', attendance_percent: 89, grade: 'A', attendance: 'present' },
+                    { id: 12, name: 'Ananya Patel', roll_no: 'CS3102', class: 'TY BSc CS', attendance_percent: 94, grade: 'A+', attendance: 'present' },
+                    { id: 13, name: 'Kavya Kumar', roll_no: 'CS3103', class: 'TY BSc CS', attendance_percent: 76, grade: 'B+', attendance: 'present' },
+                    { id: 14, name: 'Diya Singh', roll_no: 'CS3104', class: 'TY BSc CS', attendance_percent: 91, grade: 'A', attendance: 'present' },
+                    { id: 15, name: 'Aadhya Gupta', roll_no: 'CS3105', class: 'TY BSc CS', attendance_percent: 68, grade: 'C+', attendance: 'absent' },
+                    { id: 16, name: 'Aryan Verma', roll_no: 'CS2111', class: 'SY BSc CS', attendance_percent: 83, grade: 'B+', attendance: 'present' },
+                    { id: 17, name: 'Saanvi Agarwal', roll_no: 'CS3106', class: 'TY BSc CS', attendance_percent: 92, grade: 'A', attendance: 'present' },
+                    { id: 18, name: 'Rudra Pandey', roll_no: 'CS2112', class: 'SY BSc CS', attendance_percent: 79, grade: 'B', attendance: 'present' },
+                    { id: 19, name: 'Myra Kapoor', roll_no: 'CS3107', class: 'TY BSc CS', attendance_percent: 86, grade: 'A', attendance: 'present' },
+                    { id: 20, name: 'Atharv Mishra', roll_no: 'CS2113', class: 'SY BSc CS', attendance_percent: 71, grade: 'C+', attendance: 'present' }
+                ],
                 attendanceForm: {
                     subject_id: '',
-                    attendance_date: new Date().toISOString().split('T')[0]
-                },
-                resultsForm: {
-                    subject_id: '',
-                    exam_type: 'internal',
-                    max_marks: 100,
-                    academic_year: '2024-25',
-                    semester: 1
+                    date: new Date().toISOString().split('T')[0],
+                    period: '1'
                 },
 
-                async init() {
-                    await this.loadSubjects();
-                    await this.loadReports();
+                markAttendance(subjectId) {
+                    this.currentView = 'attendance';
+                    this.attendanceForm.subject_id = subjectId;
                 },
 
-                async loadSubjects() {
-                    try {
-                        // Mock subjects data
-                        this.subjects = [
-                            { id: 1, name: 'Programming in C' },
-                            { id: 2, name: 'Mathematics I' },
-                            { id: 3, name: 'Data Structures' }
-                        ];
-                    } catch (error) {
-                        console.error('Error loading subjects:', error);
-                        this.subjects = [];
-                    }
-                },
-
-                async loadStudentsForAttendance() {
-                    if (!this.attendanceForm.subject_id) return;
-                    
-                    try {
-                        // Mock students data
-                        this.studentsForAttendance = [
-                            {
-                                id: 1,
-                                name: 'John Doe',
-                                admission_number: 'ADM2024001',
-                                status: 'present'
-                            },
-                            {
-                                id: 2,
-                                name: 'Jane Smith',
-                                admission_number: 'ADM2024002',
-                                status: 'present'
-                            },
-                            {
-                                id: 3,
-                                name: 'Mike Johnson',
-                                admission_number: 'ADM2024003',
-                                status: 'present'
-                            }
-                        ];
-                    } catch (error) {
-                        console.error('Error loading students:', error);
-                        this.studentsForAttendance = [];
-                    }
-                },
-
-                async loadStudentsForResults() {
-                    if (!this.resultsForm.subject_id) return;
-                    
-                    try {
-                        // Mock students data for results
-                        this.studentsForResults = [
-                            {
-                                id: 1,
-                                name: 'John Doe',
-                                admission_number: 'ADM2024001',
-                                marks_obtained: 0
-                            },
-                            {
-                                id: 2,
-                                name: 'Jane Smith',
-                                admission_number: 'ADM2024002',
-                                marks_obtained: 0
-                            },
-                            {
-                                id: 3,
-                                name: 'Mike Johnson',
-                                admission_number: 'ADM2024003',
-                                marks_obtained: 0
-                            }
-                        ];
-                    } catch (error) {
-                        console.error('Error loading students:', error);
-                        this.studentsForResults = [];
-                    }
+                enterResults(subjectId) {
+                    alert('Results entry for subject ID: ' + subjectId);
                 },
 
                 markAllPresent() {
-                    this.studentsForAttendance.forEach(student => {
-                        student.status = 'present';
+                    this.students.forEach(student => {
+                        student.attendance = 'present';
                     });
                 },
 
-                async submitAttendance() {
-                    try {
-                        // Mock attendance submission
-                        if (this.studentsForAttendance.length === 0) {
-                            alert('No students to mark attendance for');
-                            return;
-                        }
-
-                        // Simulate API call
-                        setTimeout(() => {
-                            alert('Attendance marked successfully! (Demo mode)');
-                            this.studentsForAttendance = [];
-                            this.attendanceForm.subject_id = '';
-                        }, 500);
-                    } catch (error) {
-                        console.error('Error submitting attendance:', error);
-                        alert('Error submitting attendance');
-                    }
+                markAllAbsent() {
+                    this.students.forEach(student => {
+                        student.attendance = 'absent';
+                    });
                 },
 
-                async submitResults() {
-                    try {
-                        // Mock results submission
-                        if (this.studentsForResults.length === 0) {
-                            alert('No students to enter results for');
-                            return;
-                        }
-
-                        // Check if marks are entered
-                        const hasMarks = this.studentsForResults.some(s => s.marks_obtained > 0);
-                        if (!hasMarks) {
-                            alert('Please enter marks for at least one student');
-                            return;
-                        }
-
-                        // Simulate API call
-                        setTimeout(() => {
-                            alert('Results entered successfully! (Demo mode)');
-                            this.studentsForResults = [];
-                            this.resultsForm.subject_id = '';
-                        }, 500);
-                    } catch (error) {
-                        console.error('Error submitting results:', error);
-                        alert('Error submitting results');
-                    }
+                saveAttendance() {
+                    const presentCount = this.students.filter(s => s.attendance === 'present').length;
+                    const totalCount = this.students.length;
+                    alert(`Attendance saved successfully!\nPresent: ${presentCount}/${totalCount}`);
                 },
 
-                async loadReports() {
-                    // Load sample reports data
-                    this.attendanceReports = [
-                        { subject_id: 1, subject_name: 'Programming in C', average_percentage: 85 },
-                        { subject_id: 2, subject_name: 'Mathematics I', average_percentage: 78 }
-                    ];
-                    
-                    this.resultsReports = [
-                        { subject_id: 1, subject_name: 'Programming in C', pass_percentage: 92, class_average: 76 },
-                        { subject_id: 2, subject_name: 'Mathematics I', pass_percentage: 88, class_average: 72 }
-                    ];
+                viewStudentProfile(studentId) {
+                    const student = this.students.find(s => s.id === studentId);
+                    if (student) {
+                        alert(`Student Profile:\n\nName: ${student.name}\nRoll No: ${student.roll_no}\nClass: ${student.class}\nAttendance: ${student.attendance_percent}%\nGrade: ${student.grade}`);
+                    }
                 },
 
                 logout() {

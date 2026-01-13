@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ComplianceController;
 use App\Http\Controllers\Api\ActivityLogController;
 
+use App\Http\Controllers\Api\LessonPlanController;
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -81,6 +83,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('compliance/generate-report', [ComplianceController::class, 'generateAutomatedReport']);
     Route::get('compliance/data-quality', [ComplianceController::class, 'getDataQualityReport']);
     Route::post('compliance/export', [ComplianceController::class, 'exportComplianceData']);
+
+    // Lesson Planning
+    Route::apiResource('lesson-plans', LessonPlanController::class);
+    Route::post('lesson-plans/{lessonPlan}/submit', [LessonPlanController::class, 'submit']);
+    Route::post('lesson-plans/{lessonPlan}/approve', [LessonPlanController::class, 'approve']);
+    Route::post('lesson-plans/{lessonPlan}/reflection', [LessonPlanController::class, 'addReflection']);
 
     // Activity Logs
     Route::get('activity-logs', [ActivityLogController::class, 'index']);

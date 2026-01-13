@@ -55,15 +55,20 @@
                 <div class="text-center">
                     <p class="text-sm text-gray-600">Demo Credentials:</p>
                     <div class="mt-2 space-y-1 text-xs text-gray-500">
+                        <p>Principal: principal@pvgs.edu / password123</p>
                         <p>Admin: admin@pvgs.edu / password123</p>
-                        <p>Faculty: faculty@pvgs.edu / password123</p>
-                        <p>Student: student@test.com / password123</p>
+                        <p>Faculty: rajesh.kumar@pvgs.edu / password123</p>
+                        <p>Student: aarav.sharma@pvgs.edu / password123</p>
                     </div>
                 </div>
             </form>
 
             <!-- Quick Login Buttons -->
-            <div class="mt-6 grid grid-cols-3 gap-3">
+            <div class="mt-6 grid grid-cols-4 gap-3">
+                <button @click="quickLogin('principal')" 
+                        class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    Principal
+                </button>
                 <button @click="quickLogin('admin')" 
                         class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     Admin
@@ -121,6 +126,7 @@
                 },
 
                 getUserType(email) {
+                    if (email.includes('principal')) return 'principal';
                     if (email.includes('admin')) return 'admin';
                     if (email.includes('faculty')) return 'faculty';
                     if (email.includes('staff')) return 'staff';
@@ -130,11 +136,12 @@
                 quickLogin(type) {
                     const credentials = {
                         admin: { email: 'admin@pvgs.edu', password: 'password123' },
-                        faculty: { email: 'faculty@pvgs.edu', password: 'password123' },
-                        student: { email: 'student@test.com', password: 'password123' }
+                        faculty: { email: 'rajesh.kumar@pvgs.edu', password: 'password123' },
+                        student: { email: 'aarav.sharma@pvgs.edu', password: 'password123' },
+                        principal: { email: 'principal@pvgs.edu', password: 'password123' }
                     };
 
-                    this.form = credentials[type];
+                    this.form = credentials[type] || credentials.admin;
                     this.login();
                 },
 
@@ -142,6 +149,9 @@
                     const userType = user.user_type || (user.roles && user.roles[0]?.name);
                     
                     switch (userType) {
+                        case 'principal':
+                            window.location.href = '/principal.html';
+                            break;
                         case 'admin':
                         case 'staff':
                             window.location.href = '/admin.html';

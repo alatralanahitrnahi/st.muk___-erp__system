@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVGS ERP - Principal Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div x-data="principalDashboard()" class="min-h-screen">
+        <!-- Top Navigation -->
+        <nav class="bg-purple-600 text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="text-xl font-bold">👑 PVGS Principal Dashboard</h1>
+                        <span class="text-purple-200 text-sm">Executive Management System</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm">👤 <span x-text="user.name"></span> - <span x-text="user.designation"></span></span>
+                        <button @click="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm transition-colors">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-white shadow-lg min-h-screen">
+                <nav class="p-4">
+                    <ul class="space-y-2">
+                        <li><a @click="currentView = 'dashboard'" :class="currentView === 'dashboard' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📊 <span class="ml-2">Executive Dashboard</span>
+                        </a></li>
+                        <li><a @click="currentView = 'timetable'" :class="currentView === 'timetable' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📅 <span class="ml-2">Master Timetable</span>
+                        </a></li>
+                        <li><a @click="currentView = 'faculty'" :class="currentView === 'faculty' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            👨🏫 <span class="ml-2">Faculty Management</span>
+                        </a></li>
+                        <li><a @click="currentView = 'conflicts'" :class="currentView === 'conflicts' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            ⚠️ <span class="ml-2">Schedule Conflicts</span>
+                        </a></li>
+                        <li><a @click="currentView = 'reports'" :class="currentView === 'reports' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📈 <span class="ml-2">Executive Reports</span>
+                        </a></li>
+                        <li><a @click="currentView = 'holidays'" :class="currentView === 'holidays' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📅 <span class="ml-2">Holiday Management</span>
+                        </a></li>
+                        <li><a @click="currentView = 'settings'" :class="currentView === 'settings' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            ⚙️ <span class="ml-2">System Settings</span>
+                        </a></li>
+                        
+                        <!-- Financial Management -->
+                        <li class="pt-2 border-t border-gray-200">
+                            <div class="text-xs font-semibold text-gray-500 uppercase px-3 mb-2">Financial</div>
+                        </li>
+                        <li><a @click="currentView = 'fees'" :class="currentView === 'fees' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            💰 <span class="ml-2">Fees Collection</span>
+                        </a></li>
+                        <li><a @click="currentView = 'income'" :class="currentView === 'income' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📈 <span class="ml-2">Income Reports</span>
+                        </a></li>
+                        <li><a @click="currentView = 'expense'" :class="currentView === 'expense' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📉 <span class="ml-2">Expense Management</span>
+                        </a></li>
+                        
+                        <!-- Academic Management -->
+                        <li class="pt-2 border-t border-gray-200">
+                            <div class="text-xs font-semibold text-gray-500 uppercase px-3 mb-2">Academic</div>
+                        </li>
+                        <li><a @click="currentView = 'enquiry'" :class="currentView === 'enquiry' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📞 <span class="ml-2">Enquiry & CRM</span>
+                        </a></li>
+                        <li><a @click="currentView = 'sis'" :class="currentView === 'sis' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📁 <span class="ml-2">Student Info System</span>
+                        </a></li>
+                        <li><a @click="currentView = 'examination'" :class="currentView === 'examination' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📝 <span class="ml-2">Exam Management</span>
+                        </a></li>
+                        <li><a @click="currentView = 'cbcs'" :class="currentView === 'cbcs' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🎓 <span class="ml-2">CBCS System</span>
+                        </a></li>
+                        <li><a @click="currentView = 'obe'" :class="currentView === 'obe' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🎯 <span class="ml-2">OBE & Accreditation</span>
+                        </a></li>
+                        <li><a @click="currentView = 'predictive'" :class="currentView === 'predictive' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🤖 <span class="ml-2">Predictive Analytics</span>
+                        </a></li>
+                        <li><a @click="currentView = 'library'" :class="currentView === 'library' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📚 <span class="ml-2">Library Management</span>
+                        </a></li>
+                        <li><a @click="currentView = 'lessonplan'" :class="currentView === 'lessonplan' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📝 <span class="ml-2">Lesson Plans</span>
+                        </a></li>
+                        <li><a @click="currentView = 'calendar'" :class="currentView === 'calendar' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📅 <span class="ml-2">Annual Calendar</span>
+                        </a></li>
+                        
+                        <!-- Administrative Operations -->
+                        <li class="pt-2 border-t border-gray-200">
+                            <div class="text-xs font-semibold text-gray-500 uppercase px-3 mb-2">Administrative</div>
+                        </li>
+                        <li><a @click="currentView = 'hr'" :class="currentView === 'hr' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            👥 <span class="ml-2">Faculty & HR</span>
+                        </a></li>
+                        <li><a @click="currentView = 'transport'" :class="currentView === 'transport' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🚌 <span class="ml-2">Transport & GPS</span>
+                        </a></li>
+                        <li><a @click="currentView = 'hostel'" :class="currentView === 'hostel' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🏠 <span class="ml-2">Hostel & Canteen</span>
+                        </a></li>
+                        <li><a @click="currentView = 'frontoffice'" :class="currentView === 'frontoffice' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🏪 <span class="ml-2">Front Office</span>
+                        </a></li>
+                        <li><a @click="currentView = 'admission'" :class="currentView === 'admission' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🎓 <span class="ml-2">Online Admission</span>
+                        </a></li>
+                        <li><a @click="currentView = 'attendance'" :class="currentView === 'attendance' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📱 <span class="ml-2">QR Attendance</span>
+                        </a></li>
+                        <li><a @click="currentView = 'leave'" :class="currentView === 'leave' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🏖️ <span class="ml-2">Leave Management</span>
+                        </a></li>
+                        
+                        <!-- Resources & Analytics -->
+                        <li class="pt-2 border-t border-gray-200">
+                            <div class="text-xs font-semibold text-gray-500 uppercase px-3 mb-2">Resources</div>
+                        </li>
+                        <li><a @click="currentView = 'inventory'" :class="currentView === 'inventory' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📦 <span class="ml-2">Asset & Inventory</span>
+                        </a></li>
+                        <li><a @click="currentView = 'downloads'" :class="currentView === 'downloads' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📥 <span class="ml-2">Download Center</span>
+                        </a></li>
+                        <li><a @click="currentView = 'certificate'" :class="currentView === 'certificate' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            🏆 <span class="ml-2">Certificates</span>
+                        </a></li>
+                        
+                        <!-- Governance & Communication -->
+                        <li class="pt-2 border-t border-gray-200">
+                            <div class="text-xs font-semibold text-gray-500 uppercase px-3 mb-2">Governance</div>
+                        </li>
+                        <li><a @click="currentView = 'grievance'" :class="currentView === 'grievance' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📝 <span class="ml-2">Grievance Portal</span>
+                        </a></li>
+                        <li><a @click="currentView = 'placement'" :class="currentView === 'placement' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            💼 <span class="ml-2">Placement Services</span>
+                        </a></li>
+                        <li><a @click="currentView = 'analytics'" :class="currentView === 'analytics' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-3 rounded-lg cursor-pointer transition-colors">
+                            📊 <span class="ml-2">Analytics Dashboard</span>
+                        </a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-6">
+                <!-- Executive Dashboard -->
+                <div x-show="currentView === 'dashboard'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Executive Dashboard</h2>
+                        <p class="text-gray-600">Institutional overview and key metrics</p>
+                    </div>
+                    
+                    <!-- Key Metrics -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-blue-100 rounded-lg">
+                                    <span class="text-2xl">👥</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Total Students</h3>
+                                    <p class="text-2xl font-bold text-gray-900">1,247</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-green-100 rounded-lg">
+                                    <span class="text-2xl">👨🏫</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Faculty Members</h3>
+                                    <p class="text-2xl font-bold text-gray-900">45</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-orange-100 rounded-lg">
+                                    <span class="text-2xl">⚠️</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Schedule Conflicts</h3>
+                                    <p class="text-2xl font-bold text-gray-900" x-text="conflicts.length"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-purple-100 rounded-lg">
+                                    <span class="text-2xl">💰</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Fee Collection</h3>
+                                    <p class="text-2xl font-bold text-gray-900">₹2.5Cr</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Department Overview -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-lg font-semibold">Department Performance</h3>
+                            </div>
+                            <div class="p-6">
+                                <canvas id="departmentChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-lg font-semibold">Critical Issues</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-3">
+                                    <template x-for="conflict in conflicts.slice(0, 5)" :key="conflict.id">
+                                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                                            <div>
+                                                <div class="font-medium text-red-900" x-text="conflict.type"></div>
+                                                <div class="text-sm text-red-600" x-text="conflict.description"></div>
+                                            </div>
+                                            <button @click="resolveConflict(conflict.id)" class="text-red-600 hover:text-red-800 text-sm">
+                                                Resolve
+                                            </button>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Master Timetable -->
+                <div x-show="currentView === 'timetable'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Master Timetable</h2>
+                        <p class="text-gray-600">Complete institutional schedule overview</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-semibold">Weekly Schedule</h3>
+                                <div class="flex space-x-2">
+                                    <select x-model="selectedFaculty" class="border border-gray-300 rounded px-3 py-1 text-sm">
+                                        <option value="">All Faculty</option>
+                                        <option value="1">Dr. Rajesh Kumar</option>
+                                        <option value="2">Prof. Sunita Sharma</option>
+                                    </select>
+                                    <button @click="detectConflicts()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm">
+                                        Detect Conflicts
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monday</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tuesday</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Wednesday</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thursday</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <template x-for="timeSlot in timeSlots" :key="timeSlot.time">
+                                        <tr>
+                                            <td class="px-4 py-3 font-medium text-gray-900" x-text="timeSlot.time"></td>
+                                            <td class="px-4 py-3" x-html="getScheduleForSlot('Monday', timeSlot.time)"></td>
+                                            <td class="px-4 py-3" x-html="getScheduleForSlot('Tuesday', timeSlot.time)"></td>
+                                            <td class="px-4 py-3" x-html="getScheduleForSlot('Wednesday', timeSlot.time)"></td>
+                                            <td class="px-4 py-3" x-html="getScheduleForSlot('Thursday', timeSlot.time)"></td>
+                                            <td class="px-4 py-3" x-html="getScheduleForSlot('Friday', timeSlot.time)"></td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Faculty Management -->
+                <div x-show="currentView === 'faculty'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Faculty Management</h2>
+                        <p class="text-gray-600">Faculty workload and performance overview</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Faculty</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Designation</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Weekly Hours</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Classes</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <template x-for="faculty in facultyList" :key="faculty.id">
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                                        <span class="text-purple-600 font-medium" x-text="faculty.name.charAt(0)"></span>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900" x-text="faculty.name"></div>
+                                                        <div class="text-sm text-gray-500" x-text="faculty.email"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="faculty.designation"></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="faculty.weeklyHours + ' hrs'"></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="faculty.classes"></td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span :class="faculty.weeklyHours > 25 ? 'bg-red-100 text-red-800' : faculty.weeklyHours > 20 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'" class="px-2 py-1 text-xs rounded-full" x-text="faculty.weeklyHours > 25 ? 'Overloaded' : faculty.weeklyHours > 20 ? 'High Load' : 'Normal'"></span>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Monitor -->
+                <div x-show="currentView === 'activity'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Activity Monitor</h2>
+                        <p class="text-gray-600">Real-time system activity and user actions</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold">Recent Activities</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-3">
+                                <template x-for="activity in recentActivities" :key="activity.id">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                                <span class="text-blue-600 text-sm" x-text="activity.user.charAt(0)"></span>
+                                            </div>
+                                            <div>
+                                                <div class="font-medium text-sm" x-text="activity.action"></div>
+                                                <div class="text-xs text-gray-500" x-text="activity.user + ' • ' + activity.time"></div>
+                                            </div>
+                                        </div>
+                                        <span :class="activity.type === 'critical' ? 'bg-red-100 text-red-800' : activity.type === 'warning' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'" class="px-2 py-1 text-xs rounded-full" x-text="activity.type"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Holiday Management -->
+                <div x-show="currentView === 'holidays'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Holiday Management</h2>
+                        <p class="text-gray-600">Manage institutional holidays and makeup classes</p>
+                    </div>
+                    
+                    <!-- Holiday Calendar Overview -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-red-100 rounded-lg">
+                                    <span class="text-2xl">🇮🇳</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">National Holidays</h3>
+                                    <p class="text-2xl font-bold text-gray-900">3</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-orange-100 rounded-lg">
+                                    <span class="text-2xl">⚠️</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Pending Approvals</h3>
+                                    <p class="text-2xl font-bold text-gray-900">2</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-blue-100 rounded-lg">
+                                    <span class="text-2xl">🔄</span>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-sm font-medium text-gray-600">Makeup Classes</h3>
+                                    <p class="text-2xl font-bold text-gray-900">8</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="mb-6">
+                        <div class="border-b border-gray-200">
+                            <nav class="-mb-px flex space-x-8">
+                                <button @click="holidayTab = 'calendar'" :class="holidayTab === 'calendar' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                                    Holiday Calendar
+                                </button>
+                                <button @click="holidayTab = 'pending'" :class="holidayTab === 'pending' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                                    Pending Approvals
+                                </button>
+                                <button @click="holidayTab = 'conflicts'" :class="holidayTab === 'conflicts' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                                    Holiday Conflicts
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Holiday Calendar Tab -->
+                    <div x-show="holidayTab === 'calendar'">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-lg font-semibold">Academic Year 2024-25 Holidays</h3>
+                                    <button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 text-sm">
+                                        Add Holiday
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Holiday</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Impact</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <template x-for="holiday in holidayList" :key="holiday.id">
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm font-medium text-gray-900" x-text="holiday.name"></div>
+                                                    <div class="text-sm text-gray-500" x-text="holiday.description"></div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="holiday.date"></td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span :class="getHolidayTypeClass(holiday.type)" class="px-2 py-1 text-xs rounded-full" x-text="holiday.type"></span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span :class="holiday.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'" class="px-2 py-1 text-xs rounded-full" x-text="holiday.status"></span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="holiday.classesAffected + ' classes'"></td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <button @click="viewHolidayDetails(holiday.id)" class="text-purple-600 hover:text-purple-900 mr-3">View</button>
+                                                    <button x-show="holiday.status === 'pending'" @click="approveHoliday(holiday.id)" class="text-green-600 hover:text-green-900">Approve</button>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Approvals Tab -->
+                    <div x-show="holidayTab === 'pending'">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-lg font-semibold">Holidays Requiring Approval</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-4">
+                                    <div class="border border-orange-200 rounded-lg p-4 bg-orange-50">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-medium text-orange-900">Faculty Development Program</h4>
+                                                <p class="text-sm text-orange-700">September 15, 2024 • Institutional</p>
+                                                <p class="text-sm text-orange-600 mt-1">Mandatory FDP - No classes. Affects 15 classes across all departments.</p>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button @click="approveHoliday(14)" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                                    Approve
+                                                </button>
+                                                <button @click="rejectHoliday(14)" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                                    Reject
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border border-orange-200 rounded-lg p-4 bg-orange-50">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-medium text-orange-900">Sports Day</h4>
+                                                <p class="text-sm text-orange-700">December 10, 2024 • Institutional</p>
+                                                <p class="text-sm text-orange-600 mt-1">Annual sports event. Affects 12 classes, makeup required.</p>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button @click="approveHoliday(15)" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                                    Approve
+                                                </button>
+                                                <button @click="rejectHoliday(15)" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                                    Reject
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Holiday Conflicts Tab -->
+                    <div x-show="holidayTab === 'conflicts'">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-lg font-semibold">Holiday-Related Conflicts</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-4">
+                                    <template x-for="conflict in holidayConflicts" :key="conflict.id">
+                                        <div :class="conflict.severity === 'critical' ? 'border-red-200 bg-red-50' : conflict.severity === 'warning' ? 'border-yellow-200 bg-yellow-50' : 'border-blue-200 bg-blue-50'" class="border rounded-lg p-4">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <h4 :class="conflict.severity === 'critical' ? 'text-red-900' : conflict.severity === 'warning' ? 'text-yellow-900' : 'text-blue-900'" class="font-medium" x-text="conflict.title"></h4>
+                                                    <p :class="conflict.severity === 'critical' ? 'text-red-700' : conflict.severity === 'warning' ? 'text-yellow-700' : 'text-blue-700'" class="text-sm mt-1" x-text="conflict.description"></p>
+                                                    <p :class="conflict.severity === 'critical' ? 'text-red-600' : conflict.severity === 'warning' ? 'text-yellow-600' : 'text-blue-600'" class="text-xs mt-2" x-text="'Impact: ' + conflict.impact"></p>
+                                                </div>
+                                                <div class="flex space-x-2">
+                                                    <button @click="resolveHolidayConflict(conflict.id)" :class="conflict.severity === 'critical' ? 'bg-red-600 hover:bg-red-700' : conflict.severity === 'warning' ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-blue-600 hover:bg-blue-700'" class="text-white px-3 py-1 rounded text-sm">
+                                                        Resolve
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Settings -->
+                <div x-show="currentView === 'settings'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">System Settings</h2>
+                        <p class="text-gray-600">Configure system-wide settings and preferences</p>
+                    </div>
+                    
+                    <!-- Settings Categories -->
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        <!-- Settings Navigation -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="p-4 border-b border-gray-200">
+                                <h3 class="font-semibold text-gray-800">Settings Categories</h3>
+                            </div>
+                            <nav class="p-2">
+                                <ul class="space-y-1">
+                                    <li><a @click="settingsTab = 'general'" :class="settingsTab === 'general' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        🏢 <span class="ml-2">General Settings</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'session'" :class="settingsTab === 'session' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        🔒 <span class="ml-2">Session Settings</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'notification'" :class="settingsTab === 'notification' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        🔔 <span class="ml-2">Notifications</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'sms'" :class="settingsTab === 'sms' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        📱 <span class="ml-2">SMS Settings</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'email'" :class="settingsTab === 'email' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        ✉️ <span class="ml-2">Email Settings</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'payment'" :class="settingsTab === 'payment' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        💳 <span class="ml-2">Payment Methods</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'fees'" :class="settingsTab === 'fees' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        💰 <span class="ml-2">Fee Settings</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'print'" :class="settingsTab === 'print' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        🖨 <span class="ml-2">Print Settings</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'security'" :class="settingsTab === 'security' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        🔐 <span class="ml-2">Security</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'backup'" :class="settingsTab === 'backup' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        💾 <span class="ml-2">Backup & Restore</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'users'" :class="settingsTab === 'users' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        👥 <span class="ml-2">Users & Roles</span>
+                                    </a></li>
+                                    <li><a @click="settingsTab = 'cms'" :class="settingsTab === 'cms' ? 'bg-purple-100 text-purple-700' : 'text-gray-700 hover:bg-gray-100'" class="flex items-center p-2 rounded cursor-pointer text-sm">
+                                        🌐 <span class="ml-2">Front CMS</span>
+                                    </a></li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <!-- Settings Content -->
+                        <div class="lg:col-span-3">
+                            <!-- General Settings -->
+                            <div x-show="settingsTab === 'general'" class="bg-white rounded-xl shadow-sm border border-gray-200">
+                                <div class="p-6 border-b border-gray-200">
+                                    <h3 class="text-lg font-semibold">General Settings</h3>
+                                    <p class="text-sm text-gray-600">Basic institution and system configuration</p>
+                                </div>
+                                <div class="p-6 space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Institution Name</label>
+                                            <input type="text" x-model="settings.general.institution_name" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Institution Code</label>
+                                            <input type="text" x-model="settings.general.institution_code" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
+                                            <select x-model="settings.general.academic_year" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                <option value="2024-25">2024-25</option>
+                                                <option value="2025-26">2025-26</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
+                                            <select x-model="settings.general.timezone" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                <option value="Asia/Kolkata">Asia/Kolkata</option>
+                                                <option value="Asia/Mumbai">Asia/Mumbai</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Date Format</label>
+                                            <select x-model="settings.general.date_format" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                <option value="d-m-Y">DD-MM-YYYY</option>
+                                                <option value="Y-m-d">YYYY-MM-DD</option>
+                                                <option value="m/d/Y">MM/DD/YYYY</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                                            <select x-model="settings.general.currency" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                <option value="INR">INR (₹)</option>
+                                                <option value="USD">USD ($)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button @click="saveSettings('general')" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fee Settings -->
+                            <div x-show="settingsTab === 'fees'" class="bg-white rounded-xl shadow-sm border border-gray-200">
+                                <div class="p-6 border-b border-gray-200">
+                                    <h3 class="text-lg font-semibold">Fee Settings</h3>
+                                    <p class="text-sm text-gray-600">Configure fee collection and payment policies</p>
+                                </div>
+                                <div class="p-6 space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Late Fee Percentage (per month)</label>
+                                            <input type="number" x-model="settings.fees.late_fee_percentage" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Grace Period (days)</label>
+                                            <input type="number" x-model="settings.fees.grace_period_days" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Fee Reminder (days before due)</label>
+                                            <input type="number" x-model="settings.fees.fee_reminder_days" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" x-model="settings.fees.installment_mode" class="mr-2">
+                                            <label class="text-sm font-medium text-gray-700">Enable Installment Payments</label>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button @click="saveSettings('fees')" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SMS Settings -->
+                            <div x-show="settingsTab === 'sms'" class="bg-white rounded-xl shadow-sm border border-gray-200">
+                                <div class="p-6 border-b border-gray-200">
+                                    <h3 class="text-lg font-semibold">SMS Settings</h3>
+                                    <p class="text-sm text-gray-600">Configure SMS service provider and templates</p>
+                                </div>
+                                <div class="p-6 space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">SMS Provider</label>
+                                            <select x-model="settings.sms.sms_provider" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                <option value="textlocal">TextLocal</option>
+                                                <option value="twilio">Twilio</option>
+                                                <option value="msg91">MSG91</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
+                                            <input type="password" x-model="settings.sms.sms_api_key" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Sender ID</label>
+                                            <input type="text" x-model="settings.sms.sms_sender_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Admission SMS Template</label>
+                                        <textarea x-model="settings.sms.sms_template_admission" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button @click="saveSettings('sms')" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Settings -->
+                            <div x-show="settingsTab === 'payment'" class="bg-white rounded-xl shadow-sm border border-gray-200">
+                                <div class="p-6 border-b border-gray-200">
+                                    <h3 class="text-lg font-semibold">Payment Methods</h3>
+                                    <p class="text-sm text-gray-600">Configure online payment gateways</p>
+                                </div>
+                                <div class="p-6 space-y-6">
+                                    <div class="border border-gray-200 rounded-lg p-4">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <h4 class="font-medium">Razorpay Integration</h4>
+                                            <input type="checkbox" x-model="settings.payment.razorpay_enabled" class="toggle">
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Key ID</label>
+                                                <input type="text" x-model="settings.payment.razorpay_key_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Secret Key</label>
+                                                <input type="password" x-model="settings.payment.razorpay_key_secret" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Gateway Fee (%)</label>
+                                            <input type="number" step="0.1" x-model="settings.payment.payment_gateway_fee" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" x-model="settings.payment.offline_payment" class="mr-2">
+                                            <label class="text-sm font-medium text-gray-700">Enable Offline Payment</label>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button @click="saveSettings('payment')" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Backup Settings -->
+                            <div x-show="settingsTab === 'backup'" class="bg-white rounded-xl shadow-sm border border-gray-200">
+                                <div class="p-6 border-b border-gray-200">
+                                    <h3 class="text-lg font-semibold">Backup & Restore</h3>
+                                    <p class="text-sm text-gray-600">Manage system backups and data recovery</p>
+                                </div>
+                                <div class="p-6 space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" x-model="settings.backup.auto_backup" class="mr-2">
+                                            <label class="text-sm font-medium text-gray-700">Enable Automatic Backup</label>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Backup Frequency</label>
+                                            <select x-model="settings.backup.backup_frequency" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Retention Period (days)</label>
+                                            <input type="number" x-model="settings.backup.backup_retention_days" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        </div>
+                                    </div>
+                                    <div class="border-t pt-4">
+                                        <h4 class="font-medium mb-3">Manual Backup Actions</h4>
+                                        <div class="flex space-x-3">
+                                            <button @click="createBackup()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                                                Create Backup Now
+                                            </button>
+                                            <button @click="downloadBackup()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                                Download Latest
+                                            </button>
+                                            <button @click="restoreBackup()" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">
+                                                Restore Backup
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button @click="saveSettings('backup')" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Default view for other tabs -->
+                            <div x-show="!['general', 'fees', 'sms', 'payment', 'backup'].includes(settingsTab)" class="bg-white rounded-xl shadow-sm border border-gray-200">
+                                <div class="p-6 text-center">
+                                    <div class="text-6xl mb-4">⚙️</div>
+                                    <h3 class="text-lg font-semibold mb-2" x-text="settingsTab.charAt(0).toUpperCase() + settingsTab.slice(1) + ' Settings'"></h3>
+                                    <p class="text-gray-600">This settings panel is under development.</p>
+                                    <p class="text-sm text-gray-500 mt-2">Available settings: General, Fees, SMS, Payment Methods, Backup & Restore</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fees Collection -->
+                <div x-show="currentView === 'fees'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Fees Collection</h2>
+                        <p class="text-gray-600">Monitor fee collection and payment status</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Total Collection</h3>
+                            <p class="text-2xl font-bold text-green-600">₹2,45,67,890</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Pending Amount</h3>
+                            <p class="text-2xl font-bold text-red-600">₹45,32,110</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Collection Rate</h3>
+                            <p class="text-2xl font-bold text-blue-600">84.5%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QR Attendance -->
+                <div x-show="currentView === 'attendance'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Smart Attendance System</h2>
+                        <p class="text-gray-600">Configure QR Code, NFC, and RFID attendance options</p>
+                    </div>
+                    
+                    <!-- Attendance Method Selection -->
+                    <div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
+                        <h3 class="text-lg font-semibold mb-4">Attendance Technology Selection</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div @click="attendanceMethod = 'qr'" :class="attendanceMethod === 'qr' ? 'border-purple-500 bg-purple-50' : 'border-gray-200'" class="border-2 rounded-lg p-4 cursor-pointer transition-colors">
+                                <div class="text-center">
+                                    <div class="text-3xl mb-2">📱</div>
+                                    <h4 class="font-medium">QR Code</h4>
+                                    <p class="text-sm text-gray-600">Smartphone-based scanning</p>
+                                    <div class="mt-2 text-xs text-green-600">✓ No hardware cost</div>
+                                </div>
+                            </div>
+                            <div @click="attendanceMethod = 'nfc'" :class="attendanceMethod === 'nfc' ? 'border-purple-500 bg-purple-50' : 'border-gray-200'" class="border-2 rounded-lg p-4 cursor-pointer transition-colors">
+                                <div class="text-center">
+                                    <div class="text-3xl mb-2">📲</div>
+                                    <h4 class="font-medium">NFC Cards</h4>
+                                    <p class="text-sm text-gray-600">Near Field Communication</p>
+                                    <div class="mt-2 text-xs text-blue-600">✓ 3.5s per student</div>
+                                </div>
+                            </div>
+                            <div @click="attendanceMethod = 'rfid'" :class="attendanceMethod === 'rfid' ? 'border-purple-500 bg-purple-50' : 'border-gray-200'" class="border-2 rounded-lg p-4 cursor-pointer transition-colors">
+                                <div class="text-center">
+                                    <div class="text-3xl mb-2">🏷️</div>
+                                    <h4 class="font-medium">RFID Tags</h4>
+                                    <p class="text-sm text-gray-600">Long-range scanning</p>
+                                    <div class="mt-2 text-xs text-orange-600">✓ Walk-through gates</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuration Panel -->
+                    <div x-show="attendanceMethod" class="bg-white rounded-xl shadow-sm border">
+                        <!-- QR Code Setup -->
+                        <div x-show="attendanceMethod === 'qr'">
+                            <div class="p-6 border-b">
+                                <h3 class="font-semibold">QR Code Attendance Setup</h3>
+                                <p class="text-sm text-gray-600">Generate QR codes for classrooms and enable mobile scanning</p>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="font-medium mb-3">Quick Setup Guide</h4>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex items-center"><span class="text-green-600 mr-2">1.</span> Generate unique QR codes for each classroom</div>
+                                            <div class="flex items-center"><span class="text-green-600 mr-2">2.</span> Print and display QR codes in classrooms</div>
+                                            <div class="flex items-center"><span class="text-green-600 mr-2">3.</span> Faculty scan QR code to start attendance</div>
+                                            <div class="flex items-center"><span class="text-green-600 mr-2">4.</span> Students scan with mobile app or web portal</div>
+                                        </div>
+                                        <button class="mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm">Generate All QR Codes</button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-3">Configuration</h4>
+                                        <div class="space-y-3">
+                                            <div>
+                                                <label class="block text-sm font-medium mb-1">Session Timeout (minutes)</label>
+                                                <input type="number" value="15" class="w-full border rounded px-3 py-2 text-sm">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium mb-1">Grace Period (minutes)</label>
+                                                <input type="number" value="10" class="w-full border rounded px-3 py-2 text-sm">
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" checked class="mr-2">
+                                                <label class="text-sm">Allow late marking</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NFC Setup -->
+                        <div x-show="attendanceMethod === 'nfc'">
+                            <div class="p-6 border-b">
+                                <h3 class="font-semibold">NFC Attendance System</h3>
+                                <p class="text-sm text-gray-600">High-accuracy tap-based attendance with 31% fewer errors</p>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="font-medium mb-3">Implementation Options</h4>
+                                        <div class="space-y-3">
+                                            <div class="border rounded-lg p-3">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <h5 class="font-medium text-sm">Static Classroom Readers</h5>
+                                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Hardware Required</span>
+                                                </div>
+                                                <p class="text-xs text-gray-600 mb-2">Fixed NFC readers (PN532 + Arduino/Raspberry Pi) at classroom doors</p>
+                                                <div class="text-xs text-gray-500">Cost: ₹3,500 per classroom</div>
+                                            </div>
+                                            <div class="border rounded-lg p-3">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <h5 class="font-medium text-sm">Mobile-First Approach</h5>
+                                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Cost Effective</span>
+                                                </div>
+                                                <p class="text-xs text-gray-600 mb-2">Teachers use NFC-enabled smartphones as mobile readers</p>
+                                                <div class="text-xs text-gray-500">Cost: ₹0 (uses existing phones)</div>
+                                            </div>
+                                        </div>
+                                        <button class="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg text-sm">Setup Mobile NFC</button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-3">NFC Configuration</h4>
+                                        <div class="space-y-3">
+                                            <div>
+                                                <label class="block text-sm font-medium mb-1">Card Type</label>
+                                                <select class="w-full border rounded px-3 py-2 text-sm">
+                                                    <option>MIFARE Classic 1K</option>
+                                                    <option>NTAG213/215/216</option>
+                                                    <option>MIFARE Ultralight</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium mb-1">Encryption</label>
+                                                <select class="w-full border rounded px-3 py-2 text-sm">
+                                                    <option>AES-128</option>
+                                                    <option>DES</option>
+                                                    <option>None (Basic)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium mb-1">Read Range</label>
+                                                <select class="w-full border rounded px-3 py-2 text-sm">
+                                                    <option>5cm (High Security)</option>
+                                                    <option>10cm (Standard)</option>
+                                                    <option>15cm (Extended)</option>
+                                                </select>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" class="mr-2">
+                                                <label class="text-sm">Enable biometric verification</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                                    <h5 class="font-medium text-blue-900 mb-2">NFC Benefits (2026 Data)</h5>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                        <div class="text-center">
+                                            <div class="font-bold text-blue-600">3.5s</div>
+                                            <div class="text-blue-800">Per Student</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="font-bold text-blue-600">31%</div>
+                                            <div class="text-blue-800">Fewer Errors</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="font-bold text-blue-600">10cm</div>
+                                            <div class="text-blue-800">Max Range</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="font-bold text-blue-600">AES-128</div>
+                                            <div class="text-blue-800">Encryption</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RFID Setup -->
+                        <div x-show="attendanceMethod === 'rfid'">
+                            <div class="p-6 border-b">
+                                <h3 class="font-semibold">RFID Attendance System</h3>
+                                <p class="text-sm text-gray-600">Long-range automatic attendance for high-traffic areas</p>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="font-medium mb-3">RFID Setup Guide</h4>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex items-center"><span class="text-orange-600 mr-2">1.</span> Install RFID readers at entry points</div>
+                                            <div class="flex items-center"><span class="text-orange-600 mr-2">2.</span> Configure read range (1-10 meters)</div>
+                                            <div class="flex items-center"><span class="text-orange-600 mr-2">3.</span> Program student RFID tags</div>
+                                            <div class="flex items-center"><span class="text-orange-600 mr-2">4.</span> Set up automatic attendance rules</div>
+                                        </div>
+                                        <div class="mt-4 p-3 bg-yellow-50 rounded">
+                                            <div class="text-sm font-medium text-yellow-800">⚠️ Considerations</div>
+                                            <div class="text-xs text-yellow-700 mt-1">May cause "ghost scans" - students marked present without entering classroom</div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-3">Hardware Requirements</h4>
+                                        <div class="space-y-3">
+                                            <div>
+                                                <label class="block text-sm font-medium mb-1">RFID Frequency</label>
+                                                <select class="w-full border rounded px-3 py-2 text-sm">
+                                                    <option>125kHz (Basic)</option>
+                                                    <option>13.56MHz (HF)</option>
+                                                    <option>860-960MHz (UHF)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium mb-1">Read Range</label>
+                                                <select class="w-full border rounded px-3 py-2 text-sm">
+                                                    <option>1-3 meters</option>
+                                                    <option>3-6 meters</option>
+                                                    <option>6-10 meters</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium mb-1">Installation Points</label>
+                                                <input type="number" placeholder="Number of readers" class="w-full border rounded px-3 py-2 text-sm">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Common Actions -->
+                        <div class="p-6 border-t bg-gray-50">
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-600">
+                                    <span x-show="attendanceMethod === 'qr'">QR Code system ready to deploy</span>
+                                    <span x-show="attendanceMethod === 'nfc'">NFC system configuration</span>
+                                    <span x-show="attendanceMethod === 'rfid'">RFID system setup</span>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button class="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm">Save Configuration</button>
+                                    <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm">Deploy System</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leave Management -->
+                <div x-show="currentView === 'leave'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Leave Management</h2>
+                        <p class="text-gray-600">Student and staff leave applications</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border">
+                            <div class="p-4 border-b">
+                                <h3 class="font-semibold">Pending Leave Requests</h3>
+                            </div>
+                            <div class="p-4 space-y-3">
+                                <div class="flex justify-between items-center p-3 bg-yellow-50 rounded">
+                                    <div>
+                                        <div class="font-medium">Rahul Sharma (Student)</div>
+                                        <div class="text-sm text-gray-600">Medical Leave - 3 days</div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-sm">Approve</button>
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-sm">Reject</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border">
+                            <div class="p-4 border-b">
+                                <h3 class="font-semibold">Leave Statistics</h3>
+                            </div>
+                            <div class="p-4">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span>Student Leaves</span>
+                                        <span class="font-medium">23 pending</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Staff Leaves</span>
+                                        <span class="font-medium">5 pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Library Management -->
+                <div x-show="currentView === 'library'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Library Management</h2>
+                        <p class="text-gray-600">Book inventory and circulation management</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Total Books</h3>
+                            <p class="text-2xl font-bold text-blue-600">15,247</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Issued Books</h3>
+                            <p class="text-2xl font-bold text-orange-600">3,456</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Overdue</h3>
+                            <p class="text-2xl font-bold text-red-600">127</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Available</h3>
+                            <p class="text-2xl font-bold text-green-600">11,664</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Online Admission -->
+                <div x-show="currentView === 'admission'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Online Admission</h2>
+                        <p class="text-gray-600">Digital admission process management</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Applications Received</h3>
+                            <p class="text-2xl font-bold text-blue-600">1,247</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Pending Review</h3>
+                            <p class="text-2xl font-bold text-orange-600">89</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Approved</h3>
+                            <p class="text-2xl font-bold text-green-600">1,158</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alumni Network -->
+                <div x-show="currentView === 'alumni'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Alumni Management</h2>
+                        <p class="text-gray-600">Track alumni progress and manage networks</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Total Alumni</h3>
+                            <p class="text-2xl font-bold text-blue-600">8,247</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Employed</h3>
+                            <p class="text-2xl font-bold text-green-600">7,156 (87%)</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Higher Studies</h3>
+                            <p class="text-2xl font-bold text-purple-600">891 (11%)</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Entrepreneurs</h3>
+                            <p class="text-2xl font-bold text-orange-600">200 (2%)</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border p-6">
+                        <h3 class="font-semibold mb-4">Recent Alumni Updates</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                <div>
+                                    <div class="font-medium">Priya Sharma (2022 Batch)</div>
+                                    <div class="text-sm text-gray-600">Promoted to Senior Software Engineer at TCS</div>
+                                </div>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Career Update</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grievance Portal -->
+                <div x-show="currentView === 'grievance'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Grievance Redressal System</h2>
+                        <p class="text-gray-600">Transparent complaint management and resolution tracking</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Open Complaints</h3>
+                            <p class="text-2xl font-bold text-red-600">23</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">In Progress</h3>
+                            <p class="text-2xl font-bold text-orange-600">15</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Resolved</h3>
+                            <p class="text-2xl font-bold text-green-600">187</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Avg Resolution</h3>
+                            <p class="text-2xl font-bold text-blue-600">3.2 days</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border">
+                        <div class="p-6 border-b">
+                            <h3 class="font-semibold">Recent Grievances</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm">#GR001</td>
+                                        <td class="px-6 py-4 text-sm">Academic</td>
+                                        <td class="px-6 py-4 text-sm">Exam schedule conflict</td>
+                                        <td class="px-6 py-4"><span class="px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded">In Progress</span></td>
+                                        <td class="px-6 py-4"><span class="px-2 py-1 text-xs bg-red-100 text-red-800 rounded">High</span></td>
+                                        <td class="px-6 py-4"><button class="text-purple-600 hover:text-purple-800 text-sm">View Details</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placement Services -->
+                <div x-show="currentView === 'placement'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Placement & Career Services</h2>
+                        <p class="text-gray-600">Campus recruitment and career development</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Placement Rate</h3>
+                            <p class="text-2xl font-bold text-green-600">87%</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Active Job Posts</h3>
+                            <p class="text-2xl font-bold text-blue-600">45</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Companies</h3>
+                            <p class="text-2xl font-bold text-purple-600">127</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600">Avg Package</h3>
+                            <p class="text-2xl font-bold text-orange-600">₹4.2L</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border">
+                            <div class="p-6 border-b">
+                                <h3 class="font-semibold">Upcoming Interviews</h3>
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-blue-50 rounded">
+                                    <div>
+                                        <div class="font-medium">TCS Campus Drive</div>
+                                        <div class="text-sm text-gray-600">Jan 25, 2025 • 150 students</div>
+                                    </div>
+                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Scheduled</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border">
+                            <div class="p-6 border-b">
+                                <h3 class="font-semibold">Career Services</h3>
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <button class="w-full text-left p-3 bg-gray-50 rounded hover:bg-gray-100">
+                                    📝 Resume Builder Portal
+                                </button>
+                                <button class="w-full text-left p-3 bg-gray-50 rounded hover:bg-gray-100">
+                                    💼 Job Posting Management
+                                </button>
+                                <button class="w-full text-left p-3 bg-gray-50 rounded hover:bg-gray-100">
+                                    📅 Interview Scheduling
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Dashboard -->
+                <div x-show="currentView === 'analytics'">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Role-Based Analytics Dashboard</h2>
+                        <p class="text-gray-600">Real-time insights across academic, financial, and administrative performance</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600 mb-2">Academic Performance</h3>
+                            <div class="text-2xl font-bold text-blue-600 mb-1">92.3%</div>
+                            <div class="text-xs text-green-600">↑ +2.1% from last semester</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600 mb-2">Financial Health</h3>
+                            <div class="text-2xl font-bold text-green-600 mb-1">84.5%</div>
+                            <div class="text-xs text-green-600">↑ Fee collection rate</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border">
+                            <h3 class="text-sm font-medium text-gray-600 mb-2">Operational Efficiency</h3>
+                            <div class="text-2xl font-bold text-purple-600 mb-1">96.7%</div>
+                            <div class="text-xs text-green-600">↑ System uptime</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border">
+                            <div class="p-6 border-b">
+                                <h3 class="font-semibold">Key Performance Indicators</h3>
+                            </div>
+                            <div class="p-6">
+                                <canvas id="kpiChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border">
+                            <div class="p-6 border-b">
+                                <h3 class="font-semibold">Real-Time Alerts</h3>
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <div class="flex items-center p-3 bg-red-50 rounded">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-red-900">Fee Collection Alert</div>
+                                        <div class="text-sm text-red-700">15 students with overdue payments</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center p-3 bg-yellow-50 rounded">
+                                    <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-yellow-900">Attendance Warning</div>
+                                        <div class="text-sm text-yellow-700">23 students below 75% attendance</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Default view for other modules -->
+                <div x-show="['income', 'expense', 'enquiry', 'sis', 'examination', 'cbcs', 'obe', 'predictive', 'hr', 'transport', 'hostel', 'inventory', 'frontoffice', 'downloads', 'certificate', 'lessonplan', 'calendar'].includes(currentView)">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800" x-text="getModuleTitle(currentView)"></h2>
+                        <p class="text-gray-600" x-text="getModuleDescription(currentView)"></p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border p-8 text-center">
+                        <div class="text-6xl mb-4" x-text="getModuleIcon(currentView)"></div>
+                        <h3 class="text-lg font-semibold mb-2" x-text="getModuleTitle(currentView)"></h3>
+                        <p class="text-gray-600 mb-4" x-text="getModuleDescription(currentView)"></p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6" x-show="getModuleFeatures(currentView).length > 0">
+                            <template x-for="feature in getModuleFeatures(currentView)" :key="feature">
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="text-sm font-medium" x-text="feature"></div>
+                                </div>
+                            </template>
+                        </div>
+                        <button class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 mt-4">
+                            Configure Module
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function principalDashboard() {
+            return {
+                currentView: 'dashboard',
+                selectedFaculty: '',
+                holidayTab: 'calendar',
+                settingsTab: 'general',
+                attendanceMethod: 'qr',
+                user: {
+                    name: 'Dr. Priya Mehta',
+                    designation: 'Principal'
+                },
+                holidayList: [
+                    { id: 1, name: 'Independence Day', date: '2024-08-15', type: 'national', status: 'approved', classesAffected: 12, description: 'National holiday' },
+                    { id: 2, name: 'Diwali', date: '2024-11-01', type: 'religious', status: 'approved', classesAffected: 15, description: 'Festival of Lights' },
+                    { id: 3, name: 'Christmas', date: '2024-12-25', type: 'religious', status: 'approved', classesAffected: 10, description: 'Christian festival' },
+                    { id: 4, name: 'Sports Day', date: '2024-12-10', type: 'institutional', status: 'pending', classesAffected: 12, description: 'Annual sports event' },
+                    { id: 5, name: 'Faculty Development Program', date: '2024-09-15', type: 'institutional', status: 'pending', classesAffected: 15, description: 'Mandatory FDP' }
+                ],
+                holidayConflicts: [
+                    { id: 1, title: 'Exam Scheduled on Holiday', description: 'Mid-semester exam scheduled on Diwali (Nov 1)', impact: '150 students affected', severity: 'critical' },
+                    { id: 2, title: 'Makeup Class Overload', description: 'Dr. Rajesh has 4 makeup classes on same day', impact: 'Faculty overload violation', severity: 'warning' },
+                    { id: 3, title: 'Room Conflict for Makeup', description: 'Computer Lab 1 double-booked for makeup classes', impact: '2 classes need rescheduling', severity: 'critical' },
+                    { id: 4, title: 'Weekend Makeup Excess', description: 'More than 6 weekend makeup classes scheduled', impact: 'Student consent required', severity: 'warning' }
+                ],
+                conflicts: [
+                    { id: 1, type: 'Faculty Double Booking', description: 'Dr. Rajesh Kumar scheduled in Room 201 and Lab 1 at 2 PM' },
+                    { id: 2, type: 'Room Conflict', description: 'Computer Lab 1 booked for two different classes at 11 AM' },
+                    { id: 3, type: 'Faculty Overload', description: 'Prof. Sunita has 28 hours this week (exceeds 25hr limit)' },
+                    { id: 4, type: 'Equipment Mismatch', description: 'Programming Lab scheduled in regular classroom' }
+                ],
+                timeSlots: [
+                    { time: '09:00-10:00' },
+                    { time: '10:00-11:00' },
+                    { time: '11:00-12:00' },
+                    { time: '12:00-13:00' },
+                    { time: '13:00-14:00' },
+                    { time: '14:00-15:00' },
+                    { time: '15:00-16:00' },
+                    { time: '16:00-17:00' },
+                    { time: '17:00-18:00' }
+                ],
+                masterSchedule: {
+                    'Monday': {
+                        '10:00-11:00': 'Data Structures<br>SY BSc CS<br>Dr. Rajesh<br>Room 201',
+                        '13:00-14:00': 'DBMS<br>TY BSc CS<br>Dr. Rajesh<br>Room 301',
+                        '14:00-15:00': 'DS Lab<br>SY BSc CS<br>Dr. Rajesh<br>Lab 1'
+                    },
+                    'Tuesday': {
+                        '09:00-10:00': 'Data Structures<br>SY BSc CS<br>Dr. Rajesh<br>Room 201',
+                        '17:00-18:00': 'Web Dev<br>TY BSc CS<br>Dr. Rajesh<br>Room 301'
+                    },
+                    'Wednesday': {
+                        '11:00-12:00': 'DBMS<br>TY BSc CS<br>Dr. Rajesh<br>Room 301',
+                        '14:00-15:00': 'DBMS Lab<br>TY BSc CS<br>Dr. Rajesh<br>Lab 2'
+                    },
+                    'Thursday': {
+                        '10:00-11:00': 'Data Structures<br>SY BSc CS<br>Dr. Rajesh<br>Room 201',
+                        '15:00-16:00': 'Web Lab<br>TY BSc CS<br>Dr. Rajesh<br>Lab 2'
+                    },
+                    'Friday': {
+                        '09:00-10:00': 'Web Dev<br>TY BSc CS<br>Dr. Rajesh<br>Room 301',
+                        '11:00-12:00': 'DS Lab<br>SY BSc CS<br>Dr. Rajesh<br>Lab 1'
+                    }
+                },
+                facultyList: [
+                    { id: 1, name: 'Dr. Rajesh Kumar', email: 'rajesh.kumar@pvgs.edu', designation: 'Asst Professor & Dept Head', weeklyHours: 22, classes: 11 },
+                    { id: 2, name: 'Prof. Sunita Sharma', email: 'sunita.sharma@pvgs.edu', designation: 'Associate Professor', weeklyHours: 28, classes: 14 },
+                    { id: 3, name: 'Dr. Amit Patel', email: 'amit.patel@pvgs.edu', designation: 'Professor', weeklyHours: 18, classes: 9 }
+                ],
+                recentActivities: [
+                    { id: 1, user: 'Dr. Rajesh Kumar', action: 'Marked attendance for Data Structures', time: '10 mins ago', type: 'normal' },
+                    { id: 2, user: 'Prof. Sunita', action: 'Schedule conflict detected - Room double booking', time: '25 mins ago', type: 'critical' },
+                    { id: 3, user: 'Admin', action: 'New student admission approved', time: '1 hour ago', type: 'normal' },
+                    { id: 4, user: 'Dr. Amit', action: 'Faculty workload exceeds recommended limit', time: '2 hours ago', type: 'warning' }
+                ],
+                settings: {
+                    general: {
+                        institution_name: 'PVG\'s College of Science & Commerce',
+                        institution_code: 'PVGS001',
+                        academic_year: '2024-25',
+                        timezone: 'Asia/Kolkata',
+                        date_format: 'd-m-Y',
+                        currency: 'INR'
+                    },
+                    fees: {
+                        late_fee_percentage: 2,
+                        grace_period_days: 7,
+                        fee_reminder_days: 5,
+                        installment_mode: true
+                    },
+                    sms: {
+                        sms_provider: 'textlocal',
+                        sms_api_key: '',
+                        sms_sender_id: 'PVGS',
+                        sms_template_admission: 'Welcome to PVGS! Your admission is confirmed.'
+                    },
+                    payment: {
+                        razorpay_enabled: true,
+                        razorpay_key_id: 'rzp_test_1234567890',
+                        razorpay_key_secret: '',
+                        payment_gateway_fee: 2.5,
+                        offline_payment: true
+                    },
+                    backup: {
+                        auto_backup: true,
+                        backup_frequency: 'daily',
+                        backup_retention_days: 30
+                    }
+                },
+
+                init() {
+                    this.initDepartmentChart();
+                    this.initKPIChart();
+                },
+
+                initDepartmentChart() {
+                    setTimeout(() => {
+                        const ctx = document.getElementById('departmentChart');
+                        if (ctx) {
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Computer Science', 'Commerce', 'Arts'],
+                                    datasets: [{
+                                        label: 'Students',
+                                        data: [450, 520, 277],
+                                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B']
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            display: false
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }, 100);
+                },
+
+                initKPIChart() {
+                    setTimeout(() => {
+                        const ctx = document.getElementById('kpiChart');
+                        if (ctx) {
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                                    datasets: [{
+                                        label: 'Academic Performance',
+                                        data: [88, 90, 89, 92, 91, 93],
+                                        borderColor: '#3B82F6',
+                                        tension: 0.4
+                                    }, {
+                                        label: 'Fee Collection',
+                                        data: [82, 85, 83, 87, 84, 85],
+                                        borderColor: '#10B981',
+                                        tension: 0.4
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: false,
+                                            min: 75
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }, 200);
+                },
+
+                getScheduleForSlot(day, time) {
+                    return this.masterSchedule[day] && this.masterSchedule[day][time] 
+                        ? `<div class="text-xs p-2 bg-blue-50 rounded border-l-2 border-blue-400">${this.masterSchedule[day][time]}</div>`
+                        : '<div class="text-xs text-gray-400">Free</div>';
+                },
+
+                getHolidayTypeClass(type) {
+                    const classes = {
+                        'national': 'bg-red-100 text-red-800',
+                        'religious': 'bg-orange-100 text-orange-800', 
+                        'state': 'bg-blue-100 text-blue-800',
+                        'academic': 'bg-green-100 text-green-800',
+                        'institutional': 'bg-purple-100 text-purple-800'
+                    };
+                    return classes[type] || 'bg-gray-100 text-gray-800';
+                },
+
+                viewHolidayDetails(holidayId) {
+                    const holiday = this.holidayList.find(h => h.id === holidayId);
+                    if (holiday) {
+                        alert(`Holiday Details:\n\nName: ${holiday.name}\nDate: ${holiday.date}\nType: ${holiday.type}\nStatus: ${holiday.status}\nClasses Affected: ${holiday.classesAffected}\nDescription: ${holiday.description}`);
+                    }
+                },
+
+                approveHoliday(holidayId) {
+                    const holiday = this.holidayList.find(h => h.id === holidayId);
+                    if (holiday) {
+                        holiday.status = 'approved';
+                        alert(`Holiday "${holiday.name}" approved successfully!\n\nNext steps:\n- Notify all departments\n- Schedule makeup classes\n- Update academic calendar`);
+                    }
+                },
+
+                rejectHoliday(holidayId) {
+                    const reason = prompt('Enter rejection reason:');
+                    if (reason) {
+                        this.holidayList = this.holidayList.filter(h => h.id !== holidayId);
+                        alert('Holiday request rejected and removed from calendar.');
+                    }
+                },
+
+                resolveHolidayConflict(conflictId) {
+                    const conflict = this.holidayConflicts.find(c => c.id === conflictId);
+                    if (conflict) {
+                        alert(`Resolving: ${conflict.title}\n\nRecommended Actions:\n- Reschedule conflicting events\n- Notify affected parties\n- Update timetable`);
+                        this.holidayConflicts = this.holidayConflicts.filter(c => c.id !== conflictId);
+                    }
+                },
+
+                resolveConflict(conflictId) {
+                    this.conflicts = this.conflicts.filter(c => c.id !== conflictId);
+                    alert('Conflict marked as resolved');
+                },
+
+                saveSettings(category) {
+                    // Simulate API call to save settings
+                    alert(`${category.charAt(0).toUpperCase() + category.slice(1)} settings saved successfully!`);
+                    console.log('Saving settings for category:', category, this.settings[category]);
+                },
+
+                createBackup() {
+                    alert('Creating system backup...\n\nThis will include:\n- Database backup\n- File system backup\n- Configuration backup\n\nEstimated time: 5-10 minutes');
+                },
+
+                downloadBackup() {
+                    alert('Downloading latest backup file...\n\nFile: pvgs_backup_2024_01_15.zip\nSize: 2.3 GB\nCreated: Today 3:00 AM');
+                },
+
+                restoreBackup() {
+                    if (confirm('Are you sure you want to restore from backup?\n\nThis will overwrite current data and cannot be undone.')) {
+                        alert('Backup restoration initiated...\n\nSystem will be unavailable during restoration.\nEstimated time: 15-20 minutes');
+                    }
+                },
+
+                getModuleTitle(module) {
+                    const titles = {
+                        'income': 'Income Reports',
+                        'expense': 'Expense Management', 
+                        'enquiry': 'Enquiry & Admission CRM',
+                        'sis': 'Student Information System',
+                        'examination': 'Examination & Results Management',
+                        'cbcs': 'Choice-Based Credit System',
+                        'obe': 'Outcome-Based Education',
+                        'predictive': 'Predictive Analytics',
+                        'hr': 'Faculty & HR Management',
+                        'transport': 'Transport & Vehicle Tracking',
+                        'hostel': 'Hostel & Canteen Management',
+                        'inventory': 'Asset & Inventory Control',
+                        'frontoffice': 'Front Office Operations',
+                        'downloads': 'Download Center',
+                        'certificate': 'Certificate Management',
+                        'lessonplan': 'Lesson Plan Management',
+                        'calendar': 'Annual Academic Calendar'
+                    };
+                    return titles[module] || 'Module';
+                },
+
+                getModuleDescription(module) {
+                    const descriptions = {
+                        'income': 'Track and analyze institutional income sources',
+                        'expense': 'Monitor and control institutional expenses',
+                        'enquiry': 'Capture leads and track enrollment lifecycle',
+                        'sis': 'Centralized lifelong academic records system',
+                        'examination': 'Automated exam scheduling and result management',
+                        'cbcs': 'Student course registration and credit management',
+                        'obe': 'Course-Program outcome mapping for accreditation',
+                        'predictive': 'AI-driven student risk assessment and intervention',
+                        'hr': 'Faculty workload, payroll and recruitment management',
+                        'transport': 'Real-time GPS tracking and route optimization',
+                        'hostel': 'Room allocation and digital canteen billing',
+                        'inventory': 'Campus equipment and asset tracking',
+                        'frontoffice': 'Student services and visitor management',
+                        'downloads': 'Centralized document and resource repository',
+                        'certificate': 'Generate and manage student certificates',
+                        'lessonplan': 'Faculty lesson planning and curriculum tracking',
+                        'calendar': 'Academic year planning and event scheduling'
+                    };
+                    return descriptions[module] || 'Module description';
+                },
+
+                getModuleIcon(module) {
+                    const icons = {
+                        'income': '📈',
+                        'expense': '📉',
+                        'enquiry': '📞',
+                        'sis': '📁',
+                        'examination': '📝',
+                        'cbcs': '🎓',
+                        'obe': '🎯',
+                        'predictive': '🤖',
+                        'hr': '👥',
+                        'transport': '🚌',
+                        'hostel': '🏠',
+                        'inventory': '📦',
+                        'frontoffice': '🏪',
+                        'downloads': '📥',
+                        'certificate': '🏆',
+                        'lessonplan': '📝',
+                        'calendar': '📅'
+                    };
+                    return icons[module] || '📊';
+                },
+
+                getModuleFeatures(module) {
+                    const features = {
+                        'enquiry': ['Lead Capture', 'Enrollment Tracking', 'Multi-channel Integration'],
+                        'sis': ['Lifelong Records', 'Academic History', 'Disciplinary Logs'],
+                        'examination': ['Hall Ticket Generation', 'Question Paper Creation', 'Gradebook Management'],
+                        'cbcs': ['Course Registration', 'Credit Tracking', 'Elective Management'],
+                        'obe': ['CO-PO Mapping', 'NAAC Compliance', 'Accreditation Reports'],
+                        'predictive': ['At-Risk Detection', 'Early Intervention', 'Performance Prediction'],
+                        'hr': ['Payroll Automation', 'Leave Management', 'Performance Tracking'],
+                        'transport': ['GPS Tracking', 'Route Planning', 'Safety Monitoring'],
+                        'hostel': ['Room Allocation', 'Digital Billing', 'Mess Management']
+                    };
+                    return features[module] || [];
+                },
+
+                logout() {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login.html';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
