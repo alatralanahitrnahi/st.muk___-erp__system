@@ -1,0 +1,92 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\AdmissionController;
+use App\Http\Controllers\Api\ProgramController;
+use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\FeeController;
+use App\Http\Controllers\Api\AttendanceController;
+use App\Http\Controllers\Api\ExamController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\ComplianceController;
+use App\Http\Controllers\Api\ActivityLogController;
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Student Management
+    Route::apiResource('students', StudentController::class);
+    Route::post('students/{student}/approve', [StudentController::class, 'approve']);
+    Route::post('students/{student}/reject', [StudentController::class, 'reject']);
+
+    // Admission Management
+    Route::post('admissions', [AdmissionController::class, 'store']);
+    Route::get('admissions/{id}', [AdmissionController::class, 'show']);
+    Route::post('admissions/{id}/approve', [AdmissionController::class, 'approve']);
+    Route::post('admissions/{id}/reject', [AdmissionController::class, 'reject']);
+
+    // Academic Structure
+    Route::apiResource('programs', ProgramController::class);
+    Route::apiResource('departments', DepartmentController::class);
+
+    // Fee Management
+    Route::get('fee-structures', [FeeController::class, 'getFeeStructures']);
+    Route::post('fee-structures', [FeeController::class, 'createFeeStructure']);
+    Route::get('students/{id}/fees', [FeeController::class, 'getStudentFees']);
+    Route::post('assign-fee', [FeeController::class, 'assignFeeToStudent']);
+    Route::post('record-payment', [FeeController::class, 'recordPayment']);
+
+    // Attendance Management
+    Route::post('attendance/mark', [AttendanceController::class, 'markAttendance']);
+    Route::get('attendance', [AttendanceController::class, 'getAttendance']);
+    Route::get('students/{id}/attendance', [AttendanceController::class, 'getStudentAttendance']);
+    Route::get('attendance/report', [AttendanceController::class, 'getAttendanceReport']);
+
+    // Examination Management
+    Route::get('subjects', [ExamController::class, 'getSubjects']);
+    Route::post('subjects', [ExamController::class, 'createSubject']);
+    Route::post('results/enter', [ExamController::class, 'enterResults']);
+    Route::get('students/{id}/results', [ExamController::class, 'getStudentResults']);
+    Route::get('results/report', [ExamController::class, 'getResultsReport']);
+
+    // Reporting & Analytics
+    Route::get('reports/dashboard', [ReportController::class, 'dashboardStats']);
+    Route::get('reports/students', [ReportController::class, 'studentReport']);
+    Route::get('reports/fees', [ReportController::class, 'feeReport']);
+    Route::get('reports/attendance', [ReportController::class, 'attendanceReport']);
+    Route::get('reports/results', [ReportController::class, 'resultReport']);
+    Route::get('reports/naac', [ReportController::class, 'naacReport']);
+
+    // Payment Integration
+    Route::post('payments/create-order', [PaymentController::class, 'createOrder']);
+    Route::post('payments/verify', [PaymentController::class, 'verifyPayment']);
+    Route::get('payments/history/{studentId}', [PaymentController::class, 'getPaymentHistory']);
+    Route::post('payments/refund', [PaymentController::class, 'refundPayment']);
+
+    // Compliance & Government Reporting
+    Route::get('compliance/naac-report', [ComplianceController::class, 'getNaacReport']);
+    Route::get('compliance/government-report', [ComplianceController::class, 'getGovernmentReport']);
+    Route::get('compliance/calendar', [ComplianceController::class, 'getComplianceCalendar']);
+    Route::get('compliance/dashboard', [ComplianceController::class, 'getComplianceDashboard']);
+    Route::post('compliance/generate-report', [ComplianceController::class, 'generateAutomatedReport']);
+    Route::get('compliance/data-quality', [ComplianceController::class, 'getDataQualityReport']);
+    Route::post('compliance/export', [ComplianceController::class, 'exportComplianceData']);
+
+    // Activity Logs
+    Route::get('activity-logs', [ActivityLogController::class, 'index']);
+    Route::get('activity-logs/{id}', [ActivityLogController::class, 'show']);
+
+    // Public routes for admission form
+    Route::get('programs/public', [ProgramController::class, 'index']);
+    Route::get('departments/public', [DepartmentController::class, 'index']);
+});

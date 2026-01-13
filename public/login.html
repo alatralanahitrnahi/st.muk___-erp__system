@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVGS ERP - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div x-data="loginApp()" class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div>
+                <div class="mx-auto h-12 w-12 bg-indigo-600 rounded-full flex items-center justify-center">
+                    <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    PVGS ERP System
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    Sign in to your account
+                </p>
+            </div>
+            
+            <form @submit.prevent="login()" class="mt-8 space-y-6">
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div>
+                        <label for="email" class="sr-only">Email address</label>
+                        <input x-model="form.email" type="email" required 
+                               class="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
+                               placeholder="Email address">
+                    </div>
+                    <div>
+                        <label for="password" class="sr-only">Password</label>
+                        <input x-model="form.password" type="password" required 
+                               class="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
+                               placeholder="Password">
+                    </div>
+                </div>
+
+                <div x-show="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                    <span x-text="error"></span>
+                </div>
+
+                <div>
+                    <button type="submit" :disabled="loading"
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
+                        <span x-show="!loading">Sign in</span>
+                        <span x-show="loading">Signing in...</span>
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-sm text-gray-600">Demo Credentials:</p>
+                    <div class="mt-2 space-y-1 text-xs text-gray-500">
+                        <p>Admin: admin@pvgs.edu / password123</p>
+                        <p>Faculty: faculty@pvgs.edu / password123</p>
+                        <p>Student: student@test.com / password123</p>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Quick Login Buttons -->
+            <div class="mt-6 grid grid-cols-3 gap-3">
+                <button @click="quickLogin('admin')" 
+                        class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    Admin
+                </button>
+                <button @click="quickLogin('faculty')" 
+                        class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    Faculty
+                </button>
+                <button @click="quickLogin('student')" 
+                        class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    Student
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loginApp() {
+            return {
+                form: {
+                    email: '',
+                    password: ''
+                },
+                loading: false,
+                error: '',
+
+                async login() {
+                    this.loading = true;
+                    this.error = '';
+
+                    try {
+                        // For demo purposes, simulate successful login
+                        if (this.form.email && this.form.password) {
+                            const mockUser = {
+                                id: 1,
+                                name: this.form.email.split('@')[0],
+                                email: this.form.email,
+                                user_type: this.getUserType(this.form.email)
+                            };
+                            
+                            const mockToken = 'demo_token_' + Date.now();
+                            
+                            localStorage.setItem('token', mockToken);
+                            localStorage.setItem('user', JSON.stringify(mockUser));
+                            
+                            this.redirectUser(mockUser);
+                        } else {
+                            this.error = 'Please enter email and password';
+                        }
+                    } catch (error) {
+                        this.error = 'Login failed. Please try again.';
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                getUserType(email) {
+                    if (email.includes('admin')) return 'admin';
+                    if (email.includes('faculty')) return 'faculty';
+                    if (email.includes('staff')) return 'staff';
+                    return 'student';
+                },
+
+                quickLogin(type) {
+                    const credentials = {
+                        admin: { email: 'admin@pvgs.edu', password: 'password123' },
+                        faculty: { email: 'faculty@pvgs.edu', password: 'password123' },
+                        student: { email: 'student@test.com', password: 'password123' }
+                    };
+
+                    this.form = credentials[type];
+                    this.login();
+                },
+
+                redirectUser(user) {
+                    const userType = user.user_type || (user.roles && user.roles[0]?.name);
+                    
+                    switch (userType) {
+                        case 'admin':
+                        case 'staff':
+                            window.location.href = '/admin.html';
+                            break;
+                        case 'faculty':
+                            window.location.href = '/faculty.html';
+                            break;
+                        case 'student':
+                            localStorage.setItem('student_id', user.id);
+                            window.location.href = '/student.html';
+                            break;
+                        default:
+                            window.location.href = '/admin.html';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
