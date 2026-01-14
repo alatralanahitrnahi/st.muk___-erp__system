@@ -1,0 +1,93 @@
+/* Department Theming - WCAG 2.1 AA Compliant */
+
+:root {
+    --dept-science: #2563eb;
+    --dept-commerce: #059669;
+    --dept-arts: #7c3aed;
+    --dept-science-light: #dbeafe;
+    --dept-commerce-light: #d1fae5;
+    --dept-arts-light: #ede9fe;
+    --dept-science-dark: #1e40af;
+    --dept-commerce-dark: #047857;
+    --dept-arts-dark: #6d28d9;
+    --primary-color: #2563eb;
+    --primary-light: #dbeafe;
+    --primary-dark: #1e40af;
+}
+
+[data-department="1"], [data-department="science"] {
+    --primary-color: var(--dept-science);
+    --primary-light: var(--dept-science-light);
+    --primary-dark: var(--dept-science-dark);
+}
+
+[data-department="2"], [data-department="commerce"] {
+    --primary-color: var(--dept-commerce);
+    --primary-light: var(--dept-commerce-light);
+    --primary-dark: var(--dept-commerce-dark);
+}
+
+[data-department="3"], [data-department="arts"] {
+    --primary-color: var(--dept-arts);
+    --primary-light: var(--dept-arts-light);
+    --primary-dark: var(--dept-arts-dark);
+}
+
+.header { background: var(--primary-color) !important; }
+.nav-item.active { background: var(--primary-color) !important; }
+.btn, .btn-primary { background: var(--primary-color) !important; }
+.btn:hover { background: var(--primary-dark) !important; }
+.stat-card { border-left-color: var(--primary-color) !important; }
+
+*:focus { outline: 3px solid var(--primary-color); outline-offset: 2px; }
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px;
+    z-index: 100;
+}
+.skip-link:focus { top: 0; }
+
+@media (prefers-contrast: high) {
+    :root {
+        --dept-science: #1e40af;
+        --dept-commerce: #047857;
+        --dept-arts: #6d28d9;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media print {
+    .header {
+        background: var(--primary-color) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+button, a, .nav-item, .btn {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

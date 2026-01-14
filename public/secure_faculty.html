@@ -44,15 +44,34 @@
         .theory-slot { background: #dbeafe; color: #1e40af; }
         .lab-slot { background: #dcfce7; color: #166534; }
     </style>
+    <link rel="stylesheet" href="/css/department-theme.css">
 </head>
 <body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Session Validation & Department Integration -->
+    <script src="/js/session-department.js"></script>
+    <script>
+        if (!validateSession('faculty')) {
+            // Redirect handled by validateSession
+        }
+    </script>
+    <link rel="stylesheet" href="/css/department-theme.css">
+</head>
+<body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="header">
         <h1>👨🏫 PVGS Faculty Portal</h1>
         <div class="user-info">
             <span id="userName">Dr. Rajesh Kumar</span>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
-    </div>
+    
+    <!-- Department Selector -->
+    <div id="department-selector-container" style="padding: 0 2rem; background: white; border-bottom: 1px solid #e2e8f0;"></div>
+
+</div>
 
     <div class="container">
         <div class="sidebar">
@@ -61,7 +80,7 @@
             </nav>
         </div>
 
-        <div class="main-content">
+        <div id="main-content" class="main-content" role="main">
             <!-- Dashboard Section -->
             <div id="dashboard" class="section active">
                 <h2>Faculty Dashboard</h2>
@@ -393,11 +412,14 @@
                 if (event.state && event.state.section) {
                     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                     document.getElementById(event.state.section).classList.add('active');
-                }
+                
+            initDepartmentSelector();}
             });
             
             history.replaceState({ section: 'dashboard' }, '', '#dashboard');
         });
     </script>
+    <script src="/js/module-loader.js"></script>
+    <script src="/js/theme.js"></script>
 </body>
 </html>

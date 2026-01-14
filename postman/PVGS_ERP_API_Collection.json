@@ -1,0 +1,54 @@
+{
+  "info": {
+    "name": "PVGS ERP API - Department-Aware",
+    "description": "Department-scoped endpoints with backward compatibility",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{"key": "token", "value": "{{auth_token}}", "type": "string"}]
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://localhost/api"},
+    {"key": "department_id", "value": "1"},
+    {"key": "auth_token", "value": ""}
+  ],
+  "item": [
+    {
+      "name": "V1 Department Students",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/departments/{{department_id}}/students?per_page=15"
+      }
+    },
+    {
+      "name": "V1 Department Attendance",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/departments/{{department_id}}/attendance?date_from=2024-01-01&date_to=2024-01-31"
+      }
+    },
+    {
+      "name": "V1 Department Results",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/departments/{{department_id}}/results?academic_year=2023-2024"
+      }
+    },
+    {
+      "name": "V1 Department Fees",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/departments/{{department_id}}/fees"
+      }
+    },
+    {
+      "name": "Legacy Students (Deprecated)",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/students?department_id={{department_id}}"
+      }
+    }
+  ]
+}

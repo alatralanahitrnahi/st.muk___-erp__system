@@ -24,4 +24,21 @@ class Department extends Model
     {
         return $this->hasMany(Program::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_departments')
+                    ->withPivot('role_in_department', 'is_primary', 'start_date', 'end_date')
+                    ->withTimestamps();
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
 }

@@ -1,0 +1,353 @@
+<!-- Department Selector Component - WCAG 2.1 AA Compliant -->
+<style>
+:root {
+    --dept-primary: #2563eb;
+    --dept-secondary: #64748b;
+    --dept-bg: #f8fafc;
+    --dept-border: #e2e8f0;
+    --dept-text: #1e293b;
+}
+
+/* Department Theming - Science=Blue, Commerce=Green */
+[data-department-type="science"] { 
+    --dept-primary: #3b82f6;
+    --dept-bg: #eff6ff;
+}
+[data-department-type="commerce"] { 
+    --dept-primary: #10b981;
+    --dept-bg: #f0fdf4;
+}
+[data-department-type="arts"] { 
+    --dept-primary: #8b5cf6;
+    --dept-bg: #faf5ff;
+}
+
+.department-selector {
+    background: var(--dept-bg);
+    padding: 1rem;
+    border-bottom: 2px solid var(--dept-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.department-selector__main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.department-selector__label {
+    font-weight: 600;
+    color: var(--dept-text);
+    font-size: 0.9rem;
+}
+
+.department-selector__dropdown {
+    position: relative;
+    min-width: 200px;
+}
+
+.department-selector__select {
+    width: 100%;
+    padding: 0.625rem 2.5rem 0.625rem 1rem;
+    border: 2px solid var(--dept-primary);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: white;
+    color: var(--dept-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233b82f6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.5rem;
+}
+
+.department-selector__select:hover {
+    border-color: var(--dept-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.department-selector__select:focus {
+    outline: none;
+    border-color: var(--dept-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.department-selector__indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--dept-primary);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.department-stats {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--dept-secondary);
+}
+
+.department-stats__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid var(--dept-border);
+}
+
+.department-stats__label {
+    font-weight: 500;
+    color: var(--dept-text);
+}
+
+.department-stats__value {
+    font-weight: 700;
+    color: var(--dept-primary);
+    font-size: 1rem;
+}
+
+.department-selector__loading {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--dept-border);
+    border-top-color: var(--dept-primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .department-selector {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .department-selector__main {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .department-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .department-selector__dropdown {
+        width: 100%;
+    }
+}
+
+/* Offline Indicator */
+.department-selector--offline::after {
+    content: "Offline Mode";
+    padding: 0.25rem 0.75rem;
+    background: #fbbf24;
+    color: #78350f;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+</style>
+
+<div class="department-selector" 
+     id="departmentSelector" 
+     role="region" 
+     aria-label="Department Selector"
+     style="display: none;">
+    <div class="department-selector__main">
+        <span class="department-selector__indicator" aria-hidden="true"></span>
+        <label for="activeDepartmentSelect" class="department-selector__label">
+            Active Department:
+        </label>
+        <div class="department-selector__dropdown">
+            <select id="activeDepartmentSelect" 
+                    class="department-selector__select"
+                    aria-label="Select active department"
+                    onchange="DepartmentSelector.switch(this.value)">
+                <option value="">Loading departments...</option>
+            </select>
+        </div>
+    </div>
+    <div class="department-stats" id="departmentStats" role="status" aria-live="polite">
+        <span class="department-selector__loading" aria-label="Loading statistics"></span>
+    </div>
+</div>
+
+<script>
+const DepartmentSelector = {
+    cachedDepartments: null,
+    isOnline: navigator.onLine,
+
+    async init() {
+        const user = await this.getCurrentUser();
+        if (!user) return;
+
+        try {
+            const departments = await this.loadDepartments(user.id);
+            this.cachedDepartments = departments;
+            localStorage.setItem('cached_departments', JSON.stringify(departments));
+
+            if (departments.length === 0) return;
+
+            this.render(departments);
+            
+            const activeDept = this.getActiveDepartmentId() || departments[0].id;
+            await this.setActive(activeDept, false);
+        } catch (error) {
+            console.error('Failed to load departments:', error);
+            this.loadFromCache();
+        }
+
+        window.addEventListener('online', () => this.handleOnlineStatus(true));
+        window.addEventListener('offline', () => this.handleOnlineStatus(false));
+    },
+
+    async getCurrentUser() {
+        try {
+            const response = await fetch('/api/user', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+            });
+            return response.ok ? await response.json() : null;
+        } catch {
+            return JSON.parse(localStorage.getItem('cached_user') || 'null');
+        }
+    },
+
+    async loadDepartments(userId) {
+        const response = await fetch(`/api/users/${userId}/departments`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+        });
+        const data = await response.json();
+        return data.data || data;
+    },
+
+    loadFromCache() {
+        const cached = localStorage.getItem('cached_departments');
+        if (cached) {
+            this.cachedDepartments = JSON.parse(cached);
+            this.render(this.cachedDepartments);
+            document.getElementById('departmentSelector').classList.add('department-selector--offline');
+        }
+    },
+
+    render(departments) {
+        const selector = document.getElementById('departmentSelector');
+        const select = document.getElementById('activeDepartmentSelect');
+        
+        select.innerHTML = departments.map(d => `
+            <option value="${d.id}" data-type="${d.type || 'general'}">
+                ${d.name}
+            </option>
+        `).join('');
+
+        if (departments.length > 1) {
+            selector.style.display = 'flex';
+        }
+    },
+
+    async switch(departmentId) {
+        await this.setActive(departmentId, true);
+    },
+
+    async setActive(departmentId, reload = false) {
+        localStorage.setItem('active_department_id', departmentId);
+        
+        const select = document.getElementById('activeDepartmentSelect');
+        select.value = departmentId;
+        
+        const selectedOption = select.options[select.selectedIndex];
+        const deptType = selectedOption?.dataset.type || 'general';
+        document.body.setAttribute('data-department', departmentId);
+        document.body.setAttribute('data-department-type', deptType);
+        
+        await this.loadStats(departmentId);
+        
+        window.dispatchEvent(new CustomEvent('departmentChanged', { 
+            detail: { 
+                departmentId: parseInt(departmentId),
+                departmentType: deptType
+            } 
+        }));
+        
+        if (reload) {
+            await this.reloadData();
+        }
+    },
+
+    async loadStats(departmentId) {
+        const statsDiv = document.getElementById('departmentStats');
+        statsDiv.innerHTML = '<span class="department-selector__loading"></span>';
+        
+        try {
+            const stats = await fetch(`/api/departments/${departmentId}/dashboard`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+            }).then(r => r.json());
+            
+            statsDiv.innerHTML = `
+                <div class="department-stats__item">
+                    <span class="department-stats__label">Students:</span>
+                    <span class="department-stats__value">${stats.total_students || 0}</span>
+                </div>
+                <div class="department-stats__item">
+                    <span class="department-stats__label">Faculty:</span>
+                    <span class="department-stats__value">${stats.total_faculty || 0}</span>
+                </div>
+            `;
+            
+            localStorage.setItem(`dept_${departmentId}_stats`, JSON.stringify(stats));
+        } catch (error) {
+            const cached = localStorage.getItem(`dept_${departmentId}_stats`);
+            if (cached) {
+                const stats = JSON.parse(cached);
+                statsDiv.innerHTML = `
+                    <div class="department-stats__item">
+                        <span class="department-stats__label">Students:</span>
+                        <span class="department-stats__value">${stats.total_students || 0}</span>
+                    </div>
+                    <div class="department-stats__item">
+                        <span class="department-stats__label">Faculty:</span>
+                        <span class="department-stats__value">${stats.total_faculty || 0}</span>
+                    </div>
+                `;
+            }
+        }
+    },
+
+    async reloadData() {
+        const event = new CustomEvent('departmentDataReload');
+        window.dispatchEvent(event);
+    },
+
+    handleOnlineStatus(isOnline) {
+        this.isOnline = isOnline;
+        const selector = document.getElementById('departmentSelector');
+        selector.classList.toggle('department-selector--offline', !isOnline);
+    },
+
+    getActiveDepartmentId() {
+        return localStorage.getItem('active_department_id');
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => DepartmentSelector.init());
+</script>

@@ -37,15 +37,34 @@
         .alert-warning { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; }
         .alert-success { background: #d1fae5; border: 1px solid #10b981; color: #065f46; }
     </style>
+    <link rel="stylesheet" href="/css/department-theme.css">
 </head>
 <body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Session Validation & Department Integration -->
+    <script src="/js/session-department.js"></script>
+    <script>
+        if (!validateSession('principal')) {
+            // Redirect handled by validateSession
+        }
+    </script>
+    <link rel="stylesheet" href="/css/department-theme.css">
+</head>
+<body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="header">
         <h1>👑 PVGS ERP - Principal Dashboard</h1>
         <div class="user-info">
             <span id="userName">Dr. Priya Mehta</span>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
-    </div>
+    
+    <!-- Department Selector -->
+    <div id="department-selector-container" style="padding: 0 2rem; background: white; border-bottom: 1px solid #e2e8f0;"></div>
+
+</div>
 
     <div class="container">
         <div class="sidebar">
@@ -54,7 +73,7 @@
             </nav>
         </div>
 
-        <div class="main-content">
+        <div id="main-content" class="main-content" role="main">
             <!-- Overview Section -->
             <div id="overview" class="section active">
                 <h2>Institutional Overview</h2>
@@ -387,11 +406,14 @@
                 if (event.state && event.state.section) {
                     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                     document.getElementById(event.state.section).classList.add('active');
-                }
+                
+            initDepartmentSelector();}
             });
             
             history.replaceState({ section: 'overview' }, '', '#overview');
         });
     </script>
+    <script src="/js/module-loader.js"></script>
+    <script src="/js/theme.js"></script>
 </body>
 </html>

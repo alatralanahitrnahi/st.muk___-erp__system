@@ -30,15 +30,34 @@
         .alert { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
         .alert-danger { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
     </style>
+    <link rel="stylesheet" href="/css/department-theme.css">
 </head>
 <body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Session Validation & Department Integration -->
+    <script src="/js/session-department.js"></script>
+    <script>
+        if (!validateSession('super-admin')) {
+            // Redirect handled by validateSession
+        }
+    </script>
+    <link rel="stylesheet" href="/css/department-theme.css">
+</head>
+<body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="header">
         <h1>⚡ PVGS ERP - Super Admin</h1>
         <div class="user-info">
             <span id="userName">System Administrator</span>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
-    </div>
+    
+    <!-- Department Selector -->
+    <div id="department-selector-container" style="padding: 0 2rem; background: white; border-bottom: 1px solid #e2e8f0;"></div>
+
+</div>
 
     <div class="container">
         <div class="sidebar">
@@ -47,7 +66,7 @@
             </nav>
         </div>
 
-        <div class="main-content">
+        <div id="main-content" class="main-content" role="main">
             <!-- Dashboard Section -->
             <div id="dashboard" class="section active">
                 <h2>System Administration</h2>
@@ -170,7 +189,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (!checkSession()) return;
             document.getElementById('navigation').innerHTML = NavigationConfig.generateNavigation('super-admin');
-        });
+        
+            initDepartmentSelector();});
     </script>
+    <script src="/js/module-loader.js"></script>
+    <script src="/js/theme.js"></script>
 </body>
 </html>

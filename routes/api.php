@@ -124,3 +124,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('programs/public', [ProgramController::class, 'index']);
     Route::get('departments/public', [DepartmentController::class, 'index']);
 });
+
+// Department Head Management
+Route::middleware('auth:sanctum')->prefix('department-heads')->group(function () {
+    Route::post('/{departmentId}/assign', [App\Http\Controllers\DepartmentHeadController::class, 'assign']);
+    Route::delete('/{departmentId}', [App\Http\Controllers\DepartmentHeadController::class, 'remove']);
+    Route::get('/', [App\Http\Controllers\DepartmentHeadController::class, 'list']);
+});
+
+// Workflow Reports & NAAC Compliance
+Route::middleware('auth:sanctum')->prefix('workflow-reports')->group(function () {
+    Route::get('/departments/{departmentId}/history', [App\Http\Controllers\WorkflowReportController::class, 'departmentWorkflowHistory']);
+    Route::get('/students/{studentId}/history', [App\Http\Controllers\WorkflowReportController::class, 'studentWorkflowHistory']);
+    Route::get('/departments/{departmentId}/naac-compliance', [App\Http\Controllers\WorkflowReportController::class, 'naacComplianceReport']);
+    Route::get('/principal/dashboard', [App\Http\Controllers\WorkflowReportController::class, 'principalDashboard']);
+});
+
+
+// Include V1 API Routes (Department-Aware)
+require __DIR__.'/api_v1.php';

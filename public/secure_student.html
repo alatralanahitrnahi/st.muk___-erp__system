@@ -37,15 +37,34 @@
         .progress-bar { width: 100%; background: #e5e7eb; border-radius: 10px; height: 8px; margin: 0.5rem 0; }
         .progress-fill { background: #10b981; height: 100%; border-radius: 10px; }
     </style>
+    <link rel="stylesheet" href="/css/department-theme.css">
 </head>
 <body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Session Validation & Department Integration -->
+    <script src="/js/session-department.js"></script>
+    <script>
+        if (!validateSession('student')) {
+            // Redirect handled by validateSession
+        }
+    </script>
+    <link rel="stylesheet" href="/css/department-theme.css">
+</head>
+<body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="header">
         <h1>🎓 PVGS Student Portal</h1>
         <div class="user-info">
             <span id="userName">Student Name</span>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
-    </div>
+    
+    <!-- Department Selector -->
+    <div id="department-selector-container" style="padding: 0 2rem; background: white; border-bottom: 1px solid #e2e8f0;"></div>
+
+</div>
 
     <div class="container">
         <div class="sidebar">
@@ -105,7 +124,7 @@
             </nav>
         </div>
 
-        <div class="main-content">
+        <div id="main-content" class="main-content" role="main">
             <!-- Dashboard Section -->
             <div id="dashboard" class="section active">
                 <h2>Student Dashboard</h2>
@@ -239,7 +258,7 @@
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('student_id');
-            window.location.href = '/login.html';
+            window.location.href = '/secure_login.html';
         }
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -249,11 +268,14 @@
                 if (event.state && event.state.section) {
                     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                     document.getElementById(event.state.section).classList.add('active');
-                }
+                
+            initDepartmentSelector();}
             });
             
             history.replaceState({ section: 'dashboard' }, '', '#dashboard');
         });
     </script>
+    <script src="/js/module-loader.js"></script>
+    <script src="/js/theme.js"></script>
 </body>
 </html>

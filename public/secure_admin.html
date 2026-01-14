@@ -34,8 +34,19 @@
         .btn { background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
         .btn:hover { background: #1d4ed8; }
     </style>
+    <link rel="stylesheet" href="/css/department-theme.css">
 </head>
 <body>
+    <div id="theme-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Session Validation & Department Integration -->
+    <script src="/js/session-department.js"></script>
+    <script>
+        if (!validateSession('registrar')) {
+            // Redirect handled by validateSession
+        }
+    </script>
+
     <div class="header">
         <h1>📝 PVGS Registrar Dashboard</h1>
         <div class="user-info">
@@ -44,6 +55,9 @@
         </div>
     </div>
 
+    <!-- Department Selector -->
+    <div id="department-selector-container" style="padding: 0 2rem; background: white; border-bottom: 1px solid #e2e8f0;"></div>
+
     <div class="container">
         <div class="sidebar">
             <nav id="navigation">
@@ -51,7 +65,7 @@
             </nav>
         </div>
 
-        <div class="main-content">
+        <div id="main-content" class="main-content" role="main">
             <!-- Dashboard Section -->
             <div id="dashboard" class="section active">
                 <h2>Registrar Dashboard</h2>
@@ -299,11 +313,23 @@
             window.location.href = '/secure_login.html';
         }
         
+        // Reload dashboard data when department changes
+        function reloadDashboardData(departmentId) {
+            console.log('Reloading data for department:', departmentId);
+            const activeSection = document.querySelector('.section.active');
+            if (activeSection) {
+                loadSectionData(activeSection.id);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             if (!checkSession()) return;
             document.getElementById('navigation').innerHTML = NavigationConfig.generateNavigation('registrar');
+            initDepartmentSelector();
             loadStudents(); // Load initial data
         });
     </script>
+    <script src="/js/module-loader.js"></script>
+    <script src="/js/theme.js"></script>
 </body>
 </html>
