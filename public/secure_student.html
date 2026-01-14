@@ -202,6 +202,7 @@
         </div>
     </div>
 
+    <script src="/js/api-service.js"></script>
     <script>
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(section => {
@@ -214,6 +215,25 @@
             
             document.getElementById(sectionId).classList.add('active');
             event.target.closest('.nav-item').classList.add('active');
+            
+            history.pushState({ section: sectionId }, '', `#${sectionId}`);
+            
+            if (sectionId === 'fees') loadFees();
+            if (sectionId === 'attendance') loadAttendance();
+            if (sectionId === 'results') loadResults();
+        }
+        
+        function loadFees() {
+            const feeStatus = { total: 60000, paid: 30000, balance: 30000 };
+            alert(`Fee Status:\nTotal: ₹${feeStatus.total}\nPaid: ₹${feeStatus.paid}\nBalance: ₹${feeStatus.balance}`);
+        }
+        
+        function loadAttendance() {
+            alert('Loading your attendance records...');
+        }
+        
+        function loadResults() {
+            alert('Loading your examination results...');
         }
         
         function logout() {
@@ -224,6 +244,15 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Student portal loaded');
+            
+            window.addEventListener('popstate', function(event) {
+                if (event.state && event.state.section) {
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(event.state.section).classList.add('active');
+                }
+            });
+            
+            history.replaceState({ section: 'dashboard' }, '', '#dashboard');
         });
     </script>
 </body>

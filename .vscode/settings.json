@@ -1,0 +1,3 @@
+{
+    "LaravelExtraIntellisense.phpCommand": "XDEBUG_MODE=off php"
+}

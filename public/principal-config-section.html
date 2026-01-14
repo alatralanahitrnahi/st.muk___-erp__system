@@ -1,0 +1,200 @@
+<!-- Add to secure_principal.html after existing sections -->
+
+<!-- System Configuration Section -->
+<div id="system-config" class="section">
+    <h2>⚙️ System Configuration</h2>
+    <p>Configure role permissions, workflows, and data visibility</p>
+    
+    <!-- Tab Navigation -->
+    <div style="background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 1rem;">
+        <div style="border-bottom: 1px solid #e5e7eb; padding: 1rem;">
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn" onclick="showConfigTab('modules')" id="tab-modules">Module Access</button>
+                <button class="btn btn-secondary" onclick="showConfigTab('workflows')" id="tab-workflows">Approval Workflows</button>
+                <button class="btn btn-secondary" onclick="showConfigTab('visibility')" id="tab-visibility">Data Visibility</button>
+            </div>
+        </div>
+        
+        <!-- Module Access Tab -->
+        <div id="config-modules" class="config-tab" style="padding: 1.5rem;">
+            <h3>Module Access Configuration</h3>
+            <p style="color: #64748b; margin-bottom: 1rem;">Configure which modules each role can access</p>
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="font-weight: 600;">Select Role:</label>
+                <select id="roleSelect" onchange="loadModuleAccess()" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; margin-left: 0.5rem;">
+                    <option value="2">Principal</option>
+                    <option value="3">Registrar</option>
+                    <option value="4">Faculty</option>
+                    <option value="5">Student</option>
+                </select>
+            </div>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>View</th>
+                        <th>Create</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="moduleAccessTable">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <button class="btn" onclick="saveModuleAccess()" style="margin-top: 1rem;">Save Changes</button>
+        </div>
+        
+        <!-- Approval Workflows Tab -->
+        <div id="config-workflows" class="config-tab" style="display: none; padding: 1.5rem;">
+            <h3>Approval Workflow Configuration</h3>
+            <p style="color: #64748b; margin-bottom: 1rem;">Define approval chains for different processes</p>
+            
+            <div id="workflowsList">
+                <!-- Fee Approval Workflow -->
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Fee Payment Approval</h4>
+                    <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center;">
+                        <span>Step 1:</span>
+                        <select class="workflow-select" data-workflow="fee_approval" data-order="1" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option value="3">Registrar</option>
+                            <option value="2">Principal</option>
+                        </select>
+                        <input type="checkbox" checked> Required
+                    </div>
+                </div>
+                
+                <!-- Lesson Plan Approval Workflow -->
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Lesson Plan Approval</h4>
+                    <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; margin-bottom: 0.5rem;">
+                        <span>Step 1:</span>
+                        <select class="workflow-select" data-workflow="lesson_plan" data-order="1" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option value="6">HOD</option>
+                            <option value="2">Principal</option>
+                        </select>
+                        <input type="checkbox" checked> Required
+                    </div>
+                    <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center;">
+                        <span>Step 2:</span>
+                        <select class="workflow-select" data-workflow="lesson_plan" data-order="2" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option value="2">Principal</option>
+                            <option value="3">Registrar</option>
+                        </select>
+                        <input type="checkbox"> Required
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="saveWorkflows()" style="margin-top: 1rem;">Save Workflows</button>
+        </div>
+        
+        <!-- Data Visibility Tab -->
+        <div id="config-visibility" class="config-tab" style="display: none; padding: 1.5rem;">
+            <h3>Data Visibility Rules</h3>
+            <p style="color: #64748b; margin-bottom: 1rem;">Control what data each role can see</p>
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="font-weight: 600;">Select Role:</label>
+                <select id="visibilityRoleSelect" onchange="loadVisibilityRules()" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; margin-left: 0.5rem;">
+                    <option value="4">Faculty</option>
+                    <option value="5">Student</option>
+                    <option value="3">Registrar</option>
+                </select>
+            </div>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Entity Type</th>
+                        <th>Visibility Scope</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="visibilityRulesTable">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <button class="btn" onclick="saveVisibilityRules()" style="margin-top: 1rem;">Save Rules</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Configuration Management Functions
+const modules = ['students', 'attendance', 'results', 'fees', 'reports', 'lesson-plans'];
+const entities = ['Student', 'Attendance', 'Result', 'FeePayment', 'LessonPlan'];
+const scopes = {
+    'all': 'All records',
+    'department': 'Department only',
+    'program': 'Program only',
+    'own': 'Own records only',
+    'assigned': 'Assigned records'
+};
+
+function showConfigTab(tab) {
+    document.querySelectorAll('.config-tab').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('[id^="tab-"]').forEach(b => b.className = 'btn btn-secondary');
+    
+    document.getElementById('config-' + tab).style.display = 'block';
+    document.getElementById('tab-' + tab).className = 'btn';
+}
+
+async function loadModuleAccess() {
+    const roleId = document.getElementById('roleSelect').value;
+    const tbody = document.getElementById('moduleAccessTable');
+    
+    tbody.innerHTML = modules.map(module => `
+        <tr>
+            <td style="font-weight: 600;">${module.charAt(0).toUpperCase() + module.slice(1)}</td>
+            <td><input type="checkbox" data-module="${module}" data-perm="view"></td>
+            <td><input type="checkbox" data-module="${module}" data-perm="create"></td>
+            <td><input type="checkbox" data-module="${module}" data-perm="edit"></td>
+            <td><input type="checkbox" data-module="${module}" data-perm="delete"></td>
+        </tr>
+    `).join('');
+}
+
+function saveModuleAccess() {
+    alert('Module access configuration saved!\n\nThis will update role permissions in the database.');
+}
+
+function saveWorkflows() {
+    alert('Approval workflows saved!\n\nWorkflow chains have been updated.');
+}
+
+async function loadVisibilityRules() {
+    const roleId = document.getElementById('visibilityRoleSelect').value;
+    const tbody = document.getElementById('visibilityRulesTable');
+    
+    tbody.innerHTML = entities.map(entity => `
+        <tr>
+            <td style="font-weight: 600;">${entity}</td>
+            <td>
+                <select data-entity="${entity}" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                    ${Object.entries(scopes).map(([key, label]) => 
+                        `<option value="${key}">${label}</option>`
+                    ).join('')}
+                </select>
+            </td>
+            <td style="color: #64748b; font-size: 0.9rem;">
+                <span id="desc-${entity}">All records</span>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function saveVisibilityRules() {
+    alert('Data visibility rules saved!\n\nAccess scope has been updated for the selected role.');
+}
+
+// Initialize on load
+if (document.getElementById('system-config')) {
+    loadModuleAccess();
+    loadVisibilityRules();
+}
+</script>

@@ -323,6 +323,7 @@
     </div>
 
     <script src="/js/navigation-config.js"></script>
+    <script src="/js/api-service.js"></script>
     <script>
         // Secure session management
         function checkSession() {
@@ -366,6 +367,7 @@
             
             // Add active class to clicked nav item
             event.target.classList.add('active');
+            history.pushState({ section: sectionId }, '', `#${sectionId}`);
         }
         
         // Logout function
@@ -380,7 +382,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (!checkSession()) return;
             document.getElementById('navigation').innerHTML = NavigationConfig.generateNavigation('principal');
-            console.log('Principal dashboard loaded securely');
+            
+            window.addEventListener('popstate', function(event) {
+                if (event.state && event.state.section) {
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(event.state.section).classList.add('active');
+                }
+            });
+            
+            history.replaceState({ section: 'overview' }, '', '#overview');
         });
     </script>
 </body>

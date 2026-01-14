@@ -17,6 +17,9 @@ use App\Http\Controllers\Api\ActivityLogController;
 
 use App\Http\Controllers\Api\LessonPlanController;
 
+use App\Http\Controllers\Api\PermissionConfigController;
+use App\Http\Controllers\Api\PrincipalConfigController;
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -89,6 +92,29 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('lesson-plans/{lessonPlan}/submit', [LessonPlanController::class, 'submit']);
     Route::post('lesson-plans/{lessonPlan}/approve', [LessonPlanController::class, 'approve']);
     Route::post('lesson-plans/{lessonPlan}/reflection', [LessonPlanController::class, 'addReflection']);
+
+    // Permission Configuration (Principal only)
+    Route::prefix('config')->middleware('role:principal')->group(function() {
+        Route::get('modules/{roleId}', [PermissionConfigController::class, 'getModuleAccess']);
+        Route::post('modules/{roleId}', [PermissionConfigController::class, 'updateModuleAccess']);
+        Route::get('workflows', [PermissionConfigController::class, 'getApprovalWorkflows']);
+        Route::post('workflows', [PermissionConfigController::class, 'updateApprovalWorkflow']);
+        Route::get('visibility/{roleId}', [PermissionConfigController::class, 'getVisibilityRules']);
+        Route::post('visibility/{roleId}', [PermissionConfigController::class, 'updateVisibilityRule']);
+    });
+
+    // Principal Configuration System
+    Route::prefix('principal/config')->middleware('role:principal')->group(function() {
+        Route::get('permissions/{module}', [PrincipalConfigController::class, 'getModulePermissions']);
+        Route::post('permissions', [PrincipalConfigController::class, 'updatePermissions']);
+        Route::get('visibility/{module}', [PrincipalConfigController::class, 'getVisibilityRules']);
+        Route::post('visibility', [PrincipalConfigController::class, 'updateVisibilityRules']);
+        Route::get('approval/{workflow}', [PrincipalConfigController::class, 'getApprovalChains']);
+        Route::post('approval', [PrincipalConfigController::class, 'updateApprovalChain']);
+        Route::post('export', [PrincipalConfigController::class, 'exportConfig']);
+        Route::post('import', [PrincipalConfigController::class, 'importConfig']);
+        Route::get('history/{module}', [PrincipalConfigController::class, 'getHistory']);
+    });
 
     // Activity Logs
     Route::get('activity-logs', [ActivityLogController::class, 'index']);

@@ -1,0 +1,64 @@
+<!-- Unified Sidebar Component -->
+<script>
+function initializeSidebar(userRole) {
+    const navigationContainer = document.getElementById('navigation');
+    if (!navigationContainer) return;
+
+    const permissions = loadUserPermissions();
+    const navigationHTML = NavigationConfig.generateNavigation(userRole, permissions);
+    navigationContainer.innerHTML = navigationHTML;
+    
+    setupNavigationListeners();
+    validateNavigationConsistency(userRole);
+}
+
+function loadUserPermissions() {
+    try {
+        const cached = localStorage.getItem('user_permissions');
+        return cached ? JSON.parse(cached) : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function setupNavigationListeners() {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const moduleKey = item.dataset.module;
+            console.log('Navigation:', moduleKey);
+        });
+    });
+}
+
+function validateNavigationConsistency(userRole) {
+    const modules = NavigationConfig.getModulesForRole(userRole);
+    const missing = modules.filter(m => !document.getElementById(m.key));
+    
+    if (missing.length > 0) {
+        console.warn(`Missing sections for ${userRole}:`, missing.map(m => m.key));
+        return false;
+    }
+    
+    console.log(`✓ Navigation validated for ${userRole}`);
+    return true;
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    
+    const section = document.getElementById(sectionId);
+    if (section) section.classList.add('active');
+    
+    const navItem = document.querySelector(`.nav-item[data-module="${sectionId}"]`);
+    if (navItem) navItem.classList.add('active');
+    
+    history.pushState({ section: sectionId }, '', `#${sectionId}`);
+}
+
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.section) {
+        showSection(event.state.section);
+    }
+});
+</script>

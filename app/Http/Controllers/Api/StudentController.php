@@ -8,9 +8,16 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with(['user', 'program', 'category'])->get();
+        $query = Student::with(['user', 'program', 'category']);
+        
+        // Apply visibility scope based on user role
+        if ($request->user()->user_type !== 'super-admin') {
+            $query->visibleTo($request->user());
+        }
+        
+        $students = $query->get();
         return response()->json($students);
     }
 

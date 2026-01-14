@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PVGS ERP - Admin Dashboard</title>
+    <title>PVGS ERP - Registrar Dashboard</title>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,9 +37,9 @@
 </head>
 <body>
     <div class="header">
-        <h1>🔧 PVGS Admin Dashboard</h1>
+        <h1>📝 PVGS Registrar Dashboard</h1>
         <div class="user-info">
-            <span id="userName">Admin User</span>
+            <span id="userName">Registrar</span>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </div>
@@ -54,8 +54,8 @@
         <div class="main-content">
             <!-- Dashboard Section -->
             <div id="dashboard" class="section active">
-                <h2>System Overview</h2>
-                <p>PVGS Academic & Administrative Management</p>
+                <h2>Registrar Dashboard</h2>
+                <p>Student Records & Administrative Operations</p>
                 
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -113,9 +113,18 @@
                 <p>Review and process student applications</p>
             </div>
 
+            <!-- Students Section -->
             <div id="students" class="section">
                 <h2>🎓 Student Records</h2>
                 <p>Manage student information and academic records</p>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Student List</h3>
+                        <button class="btn" onclick="showAddStudentForm()">Add New Student</button>
+                    </div>
+                    <div id="studentsList">Loading students...</div>
+                </div>
             </div>
 
             <div id="documents" class="section">
@@ -135,24 +144,49 @@
 
 
 
+            <!-- Attendance Section -->
             <div id="attendance" class="section">
                 <h2>📅 Attendance Reports</h2>
                 <p>Generate attendance reports and analytics</p>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 1rem;">
+                    <h3>Recent Attendance</h3>
+                    <div id="attendanceList">Loading attendance data...</div>
+                </div>
             </div>
 
+            <!-- Results Section -->
             <div id="results" class="section">
                 <h2>📊 Results Management</h2>
                 <p>Manage examination results and grade processing</p>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 1rem;">
+                    <h3>Recent Results</h3>
+                    <div id="resultsList">Loading results...</div>
+                </div>
             </div>
 
+            <!-- Reports Section -->
             <div id="reports" class="section">
                 <h2>📋 NAAC Reports</h2>
                 <p>Generate compliance and accreditation reports</p>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 1rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <button class="btn" onclick="generateReport('students')">Student Report</button>
+                        <button class="btn" onclick="generateReport('attendance')">Attendance Report</button>
+                        <button class="btn" onclick="generateReport('fees')">Fee Report</button>
+                        <button class="btn" onclick="generateReport('naac')">NAAC Report</button>
+                    </div>
+                    <div id="reportOutput" style="margin-top: 1rem;"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="/js/navigation-config.js"></script>
+    <script src="/js/api-service.js"></script>
+    <script src="/js/data-loader.js"></script>
     <script>
         function checkSession() {
             const session = localStorage.getItem('secure_session');
@@ -186,6 +220,77 @@
             
             document.getElementById(sectionId).classList.add('active');
             event.target.closest('.nav-item').classList.add('active');
+            
+            // Load data when section is shown
+            loadSectionData(sectionId);
+        }
+        
+        function loadSectionData(sectionId) {
+            switch(sectionId) {
+                case 'students':
+                    loadStudents();
+                    break;
+                case 'attendance':
+                    loadAttendance();
+                    break;
+                case 'results':
+                    loadResults();
+                    break;
+            }
+        }
+        
+        async function loadStudents() {
+            const container = document.getElementById('studentsList');
+            container.innerHTML = UIRenderer.renderLoading();
+            
+            try {
+                const students = await DataLoader.loadStudents();
+                container.innerHTML = UIRenderer.renderStudentsTable(students);
+            } catch (error) {
+                container.innerHTML = UIRenderer.renderError(error.message);
+            }
+        }
+        
+        async function loadAttendance() {
+            const container = document.getElementById('attendanceList');
+            container.innerHTML = UIRenderer.renderLoading();
+            
+            try {
+                const attendance = await DataLoader.loadAttendance();
+                container.innerHTML = UIRenderer.renderAttendanceTable(attendance);
+            } catch (error) {
+                container.innerHTML = UIRenderer.renderError(error.message);
+            }
+        }
+        
+        async function loadResults() {
+            const container = document.getElementById('resultsList');
+            container.innerHTML = UIRenderer.renderLoading();
+            
+            try {
+                const results = await DataLoader.loadResults();
+                container.innerHTML = UIRenderer.renderResultsTable(results);
+            } catch (error) {
+                container.innerHTML = UIRenderer.renderError(error.message);
+            }
+        }
+        
+        function generateReport(type) {
+            const output = document.getElementById('reportOutput');
+            output.innerHTML = `<div style="background: #f0fdf4; border: 1px solid #86efac; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+                <strong>✓ Report Generated:</strong> ${type.charAt(0).toUpperCase() + type.slice(1)} report is being prepared...
+            </div>`;
+            setTimeout(() => {
+                output.innerHTML += `<p style="margin-top: 0.5rem;">Download link: <a href="#" style="color: #2563eb;">Download ${type}_report.pdf</a></p>`;
+            }, 1500);
+        }
+        
+        function viewStudent(id) {
+            alert(`Viewing student details for ID: ${id}\n\nThis will open the student detail page.`);
+        }
+        
+        function showAddStudentForm() {
+            alert('Add Student Form\n\nThis will open a modal or navigate to the add student page.');
         }
         
         function logout() {
@@ -197,6 +302,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (!checkSession()) return;
             document.getElementById('navigation').innerHTML = NavigationConfig.generateNavigation('registrar');
+            loadStudents(); // Load initial data
         });
     </script>
 </body>
