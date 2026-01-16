@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVGS ERP - System Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { color: #667eea; margin-bottom: 10px; }
+        .status { 
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        .card h3 { color: #667eea; margin-bottom: 8px; font-size: 16px; }
+        .card p { color: #64748b; font-size: 14px; }
+        .info { 
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info strong { color: #1e40af; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 PVGS ERP System</h1>
+        <span class="status">✓ Running</span>
+        
+        <div class="info">
+            <strong>Server:</strong> http://localhost:8000<br>
+            <strong>Database:</strong> SQLite<br>
+            <strong>Status:</strong> Ready for testing
+        </div>
+
+        <h2 style="margin-top: 30px; margin-bottom: 15px; color: #334155;">Access Dashboards</h2>
+        
+        <div class="grid">
+            <a href="/secure_login.html" class="card">
+                <h3>🔐 Login</h3>
+                <p>Secure authentication</p>
+            </a>
+            
+            <a href="/secure_super_admin.html" class="card">
+                <h3>👑 Super Admin</h3>
+                <p>System administration</p>
+            </a>
+            
+            <a href="/secure_principal.html" class="card">
+                <h3>🎓 Principal</h3>
+                <p>Academic oversight</p>
+            </a>
+            
+            <a href="/secure_admin.html" class="card">
+                <h3>📋 Registrar</h3>
+                <p>Administrative tasks</p>
+            </a>
+            
+            <a href="/secure_faculty.html" class="card">
+                <h3>👨‍🏫 Faculty</h3>
+                <p>Teaching dashboard</p>
+            </a>
+            
+            <a href="/secure_student.html" class="card">
+                <h3>🎒 Student</h3>
+                <p>Student portal</p>
+            </a>
+        </div>
+
+        <h2 style="margin-top: 30px; margin-bottom: 15px; color: #334155;">Quick Actions</h2>
+        
+        <div class="grid">
+            <div class="card" onclick="testAPI()">
+                <h3>🔌 Test API</h3>
+                <p>Check API connectivity</p>
+            </div>
+            
+            <div class="card" onclick="checkDB()">
+                <h3>💾 Check Database</h3>
+                <p>Verify database status</p>
+            </div>
+            
+            <a href="/principal-config-section.html" class="card">
+                <h3>⚙️ Configuration</h3>
+                <p>System settings</p>
+            </a>
+            
+            <a href="/performance.html" class="card">
+                <h3>📊 Performance</h3>
+                <p>System metrics</p>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/v1/departments/1/students');
+                alert(response.ok ? '✅ API is working!' : '⚠️ API returned: ' + response.status);
+            } catch (error) {
+                alert('❌ API Error: ' + error.message);
+            }
+        }
+
+        function checkDB() {
+            alert('Database: SQLite\nLocation: database/database.sqlite\nStatus: Connected');
+        }
+    </script>
+</body>
+</html>

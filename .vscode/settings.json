@@ -1,3 +1,8 @@
 {
-    "LaravelExtraIntellisense.phpCommand": "XDEBUG_MODE=off php"
+    "LaravelExtraIntellisense.phpCommand": "XDEBUG_MODE=off php",
+    "builder.serverUrl": "",
+    "builder.command": "cd frontend\nnpm run dev",
+    "builder.runDevServer": true,
+    "builder.autoDetectDevServer": true,
+    "builder.launchType": "editor"
 }

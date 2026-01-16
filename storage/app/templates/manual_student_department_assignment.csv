@@ -1,0 +1,28 @@
+student_id,student_name,enrollment_number,program_id,department_id,reason,notes
+1,Alice Johnson,2023CS001,NULL,1,No program enrollment,Assign to Computer Science based on admission records
+2,Bob Smith,2023MATH002,5,2,Program missing department,Assign to Mathematics department
+3,Carol White,2022PHY003,NULL,3,Transfer student,Assign to Physics department
+
+# Instructions for Manual Student-Department Assignment
+#
+# 1. Fill in the department_id column with the appropriate department ID
+# 2. Provide reason for manual assignment
+# 3. Add notes with additional context
+# 4. Save and import using: php artisan department:import-student-assignments
+#
+# Common Reasons for Manual Assignment:
+# - Student has no program enrollment record
+# - Student's program is missing department_id
+# - Transfer student with incomplete records
+# - ATKT/Backlog student who changed departments
+# - Historical data migration issues
+#
+# ATKT/Backlog Rules (per ATKT_Backlog_Rules.md):
+# - Student department is based on CURRENT program enrollment
+# - ATKT subjects retain original department context
+# - Cross-department ATKT requires approval workflow
+#
+# Validation Rules:
+# - student_id must exist in students table
+# - department_id must exist in departments table
+# - If program_id is provided, it should match student's current program

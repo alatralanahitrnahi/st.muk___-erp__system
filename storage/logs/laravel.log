@@ -29428,3 +29428,183 @@
 #13 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #14 {main}
 "} 
+[2026-01-14 12:53:38] laravel.EMERGENCY: Unable to create configured logger. Using emergency logger. {"exception":"[object] (InvalidArgumentException(code: 0): Log [] is not defined. at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php:212)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(137): Illuminate\\Log\\LogManager->resolve(NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\\Log\\LogManager->get(NULL)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\\Log\\LogManager->driver()
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\\Log\\LogManager->error('Illuminate\\\\Rout...', Array)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\\Foundation\\Exceptions\\Handler->reportThrowable(Object(TypeError))
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(523): Illuminate\\Foundation\\Exceptions\\Handler->report(Object(TypeError))
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(203): Illuminate\\Foundation\\Console\\Kernel->reportException(Object(TypeError))
+#7 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2026-01-14 12:53:38] laravel.ERROR: Illuminate\Routing\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\Http\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 {"exception":"[object] (TypeError(code: 0): Illuminate\\Routing\\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\\Http\\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:128)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php(64): Illuminate\\Routing\\UrlGenerator->__construct(Object(Illuminate\\Routing\\RouteCollection), NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(908): Illuminate\\Routing\\RoutingServiceProvider->Illuminate\\Routing\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(986): Illuminate\\Container\\Container->resolve('url', Array, true)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\\Foundation\\Application->resolve('url', Array)
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(971): Illuminate\\Container\\Container->make('url', Array)
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(120): Illuminate\\Foundation\\Application->make('url', Array)
+#7 /workspaces/st.muk___-erp__system/config/sanctum.php(19): app('url')
+#8 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(70): require('/workspaces/st....')
+#9 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(39): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->loadConfigurationFiles(Object(Illuminate\\Foundation\\Application), Object(Illuminate\\Config\\Repository))
+#10 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(286): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->bootstrap(Object(Illuminate\\Foundation\\Application))
+#11 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#12 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#13 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 {main}
+"} 
+[2026-01-14 13:03:10] laravel.EMERGENCY: Unable to create configured logger. Using emergency logger. {"exception":"[object] (InvalidArgumentException(code: 0): Log [] is not defined. at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php:212)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(137): Illuminate\\Log\\LogManager->resolve(NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\\Log\\LogManager->get(NULL)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\\Log\\LogManager->driver()
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\\Log\\LogManager->error('Illuminate\\\\Rout...', Array)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\\Foundation\\Exceptions\\Handler->reportThrowable(Object(TypeError))
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(523): Illuminate\\Foundation\\Exceptions\\Handler->report(Object(TypeError))
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(203): Illuminate\\Foundation\\Console\\Kernel->reportException(Object(TypeError))
+#7 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2026-01-14 13:03:10] laravel.ERROR: Illuminate\Routing\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\Http\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 {"exception":"[object] (TypeError(code: 0): Illuminate\\Routing\\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\\Http\\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:128)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php(64): Illuminate\\Routing\\UrlGenerator->__construct(Object(Illuminate\\Routing\\RouteCollection), NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(908): Illuminate\\Routing\\RoutingServiceProvider->Illuminate\\Routing\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(986): Illuminate\\Container\\Container->resolve('url', Array, true)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\\Foundation\\Application->resolve('url', Array)
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(971): Illuminate\\Container\\Container->make('url', Array)
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(120): Illuminate\\Foundation\\Application->make('url', Array)
+#7 /workspaces/st.muk___-erp__system/config/sanctum.php(19): app('url')
+#8 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(70): require('/workspaces/st....')
+#9 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(39): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->loadConfigurationFiles(Object(Illuminate\\Foundation\\Application), Object(Illuminate\\Config\\Repository))
+#10 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(286): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->bootstrap(Object(Illuminate\\Foundation\\Application))
+#11 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#12 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#13 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 {main}
+"} 
+[2026-01-14 13:03:32] laravel.EMERGENCY: Unable to create configured logger. Using emergency logger. {"exception":"[object] (InvalidArgumentException(code: 0): Log [] is not defined. at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php:212)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(137): Illuminate\\Log\\LogManager->resolve(NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\\Log\\LogManager->get(NULL)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\\Log\\LogManager->driver()
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\\Log\\LogManager->error('Illuminate\\\\Rout...', Array)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\\Foundation\\Exceptions\\Handler->reportThrowable(Object(TypeError))
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(523): Illuminate\\Foundation\\Exceptions\\Handler->report(Object(TypeError))
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(203): Illuminate\\Foundation\\Console\\Kernel->reportException(Object(TypeError))
+#7 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2026-01-14 13:03:32] laravel.ERROR: Illuminate\Routing\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\Http\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 {"exception":"[object] (TypeError(code: 0): Illuminate\\Routing\\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\\Http\\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:128)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php(64): Illuminate\\Routing\\UrlGenerator->__construct(Object(Illuminate\\Routing\\RouteCollection), NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(908): Illuminate\\Routing\\RoutingServiceProvider->Illuminate\\Routing\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(986): Illuminate\\Container\\Container->resolve('url', Array, true)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\\Foundation\\Application->resolve('url', Array)
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(971): Illuminate\\Container\\Container->make('url', Array)
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(120): Illuminate\\Foundation\\Application->make('url', Array)
+#7 /workspaces/st.muk___-erp__system/config/sanctum.php(19): app('url')
+#8 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(70): require('/workspaces/st....')
+#9 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(39): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->loadConfigurationFiles(Object(Illuminate\\Foundation\\Application), Object(Illuminate\\Config\\Repository))
+#10 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(286): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->bootstrap(Object(Illuminate\\Foundation\\Application))
+#11 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#12 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#13 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 {main}
+"} 
+[2026-01-14 13:03:47] laravel.EMERGENCY: Unable to create configured logger. Using emergency logger. {"exception":"[object] (InvalidArgumentException(code: 0): Log [] is not defined. at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php:212)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(137): Illuminate\\Log\\LogManager->resolve(NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\\Log\\LogManager->get(NULL)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\\Log\\LogManager->driver()
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\\Log\\LogManager->error('Illuminate\\\\Rout...', Array)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\\Foundation\\Exceptions\\Handler->reportThrowable(Object(TypeError))
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(523): Illuminate\\Foundation\\Exceptions\\Handler->report(Object(TypeError))
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(203): Illuminate\\Foundation\\Console\\Kernel->reportException(Object(TypeError))
+#7 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2026-01-14 13:03:47] laravel.ERROR: Illuminate\Routing\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\Http\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 {"exception":"[object] (TypeError(code: 0): Illuminate\\Routing\\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\\Http\\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:128)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php(64): Illuminate\\Routing\\UrlGenerator->__construct(Object(Illuminate\\Routing\\RouteCollection), NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(908): Illuminate\\Routing\\RoutingServiceProvider->Illuminate\\Routing\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(986): Illuminate\\Container\\Container->resolve('url', Array, true)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\\Foundation\\Application->resolve('url', Array)
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(971): Illuminate\\Container\\Container->make('url', Array)
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(120): Illuminate\\Foundation\\Application->make('url', Array)
+#7 /workspaces/st.muk___-erp__system/config/sanctum.php(19): app('url')
+#8 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(70): require('/workspaces/st....')
+#9 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(39): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->loadConfigurationFiles(Object(Illuminate\\Foundation\\Application), Object(Illuminate\\Config\\Repository))
+#10 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(286): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->bootstrap(Object(Illuminate\\Foundation\\Application))
+#11 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#12 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#13 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 {main}
+"} 
+[2026-01-14 13:04:08] laravel.EMERGENCY: Unable to create configured logger. Using emergency logger. {"exception":"[object] (InvalidArgumentException(code: 0): Log [] is not defined. at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php:212)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(137): Illuminate\\Log\\LogManager->resolve(NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\\Log\\LogManager->get(NULL)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\\Log\\LogManager->driver()
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\\Log\\LogManager->error('Illuminate\\\\Rout...', Array)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\\Foundation\\Exceptions\\Handler->reportThrowable(Object(TypeError))
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(523): Illuminate\\Foundation\\Exceptions\\Handler->report(Object(TypeError))
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(203): Illuminate\\Foundation\\Console\\Kernel->reportException(Object(TypeError))
+#7 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2026-01-14 13:04:08] laravel.ERROR: Illuminate\Routing\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\Http\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 {"exception":"[object] (TypeError(code: 0): Illuminate\\Routing\\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\\Http\\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:128)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php(64): Illuminate\\Routing\\UrlGenerator->__construct(Object(Illuminate\\Routing\\RouteCollection), NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(908): Illuminate\\Routing\\RoutingServiceProvider->Illuminate\\Routing\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(986): Illuminate\\Container\\Container->resolve('url', Array, true)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\\Foundation\\Application->resolve('url', Array)
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(971): Illuminate\\Container\\Container->make('url', Array)
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(120): Illuminate\\Foundation\\Application->make('url', Array)
+#7 /workspaces/st.muk___-erp__system/config/sanctum.php(19): app('url')
+#8 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(70): require('/workspaces/st....')
+#9 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(39): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->loadConfigurationFiles(Object(Illuminate\\Foundation\\Application), Object(Illuminate\\Config\\Repository))
+#10 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(286): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->bootstrap(Object(Illuminate\\Foundation\\Application))
+#11 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#12 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#13 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 {main}
+"} 
+[2026-01-14 13:05:06] laravel.EMERGENCY: Unable to create configured logger. Using emergency logger. {"exception":"[object] (InvalidArgumentException(code: 0): Log [] is not defined. at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php:212)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(137): Illuminate\\Log\\LogManager->resolve(NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\\Log\\LogManager->get(NULL)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\\Log\\LogManager->driver()
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\\Log\\LogManager->error('Illuminate\\\\Rout...', Array)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\\Foundation\\Exceptions\\Handler->reportThrowable(Object(TypeError))
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(523): Illuminate\\Foundation\\Exceptions\\Handler->report(Object(TypeError))
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(203): Illuminate\\Foundation\\Console\\Kernel->reportException(Object(TypeError))
+#7 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 {main}
+"} 
+[2026-01-14 13:05:06] laravel.ERROR: Illuminate\Routing\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\Http\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 {"exception":"[object] (TypeError(code: 0): Illuminate\\Routing\\UrlGenerator::__construct(): Argument #2 ($request) must be of type Illuminate\\Http\\Request, null given, called in /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php on line 64 at /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:128)
+[stacktrace]
+#0 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php(64): Illuminate\\Routing\\UrlGenerator->__construct(Object(Illuminate\\Routing\\RouteCollection), NULL, NULL)
+#1 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(908): Illuminate\\Routing\\RoutingServiceProvider->Illuminate\\Routing\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#2 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#3 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(986): Illuminate\\Container\\Container->resolve('url', Array, true)
+#4 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\\Foundation\\Application->resolve('url', Array)
+#5 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(971): Illuminate\\Container\\Container->make('url', Array)
+#6 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(120): Illuminate\\Foundation\\Application->make('url', Array)
+#7 /workspaces/st.muk___-erp__system/config/sanctum.php(19): app('url')
+#8 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(70): require('/workspaces/st....')
+#9 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php(39): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->loadConfigurationFiles(Object(Illuminate\\Foundation\\Application), Object(Illuminate\\Config\\Repository))
+#10 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(286): Illuminate\\Foundation\\Bootstrap\\LoadConfiguration->bootstrap(Object(Illuminate\\Foundation\\Application))
+#11 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#12 /workspaces/st.muk___-erp__system/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#13 /workspaces/st.muk___-erp__system/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 {main}
+"} 

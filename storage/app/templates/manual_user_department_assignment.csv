@@ -1,0 +1,31 @@
+user_id,name,email,role,department_id,role_in_department,is_primary,notes
+1,John Doe,john@example.com,faculty,1,faculty,yes,Manually assign faculty without subject associations
+2,Jane Smith,jane@example.com,student,2,student,yes,Manually assign students without program enrollment
+3,Bob Johnson,bob@example.com,registrar,1,registrar,yes,Manually assign registrars to specific departments
+
+# Instructions for Manual Department Assignment
+# 
+# 1. Fill in the department_id column with the appropriate department ID
+# 2. Set role_in_department to match the user's role (or department_head for HODs)
+# 3. Set is_primary to "yes" for the user's primary department, "no" for additional departments
+# 4. Add notes explaining why manual assignment was needed
+# 5. Save this file and import using: php artisan department:import-manual-assignments
+#
+# Available Departments:
+# Run: SELECT id, name FROM departments; to get department IDs
+#
+# Available Roles:
+# - super-admin (assign to all departments)
+# - principal (assign to all departments)
+# - department_head (assign to specific department as HOD)
+# - registrar (assign to primary department)
+# - faculty (assign based on teaching subjects)
+# - student (assign based on program enrollment)
+#
+# Validation Rules:
+# - user_id must exist in users table
+# - department_id must exist in departments table
+# - role_in_department must be valid role
+# - Each user must have exactly one primary department (is_primary = yes)
+# - Students can only belong to one department
+# - Faculty can belong to multiple departments

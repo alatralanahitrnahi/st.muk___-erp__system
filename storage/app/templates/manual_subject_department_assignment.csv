@@ -1,0 +1,22 @@
+subject_id,subject_code,subject_name,department_id,reason,notes
+1,CS101,Computer Science Fundamentals,1,No program association,Assign to Computer Science department
+2,MATH201,Advanced Mathematics,2,Multiple program associations,Assign to Mathematics department
+3,PHY301,Quantum Physics,3,Orphaned subject,Assign to Physics department
+
+# Instructions for Manual Subject-Department Assignment
+#
+# 1. Fill in the department_id column with the appropriate department ID
+# 2. Provide reason for manual assignment
+# 3. Add notes with additional context
+# 4. Save and import using: php artisan department:import-subject-assignments
+#
+# Common Reasons for Manual Assignment:
+# - Subject has no program associations
+# - Subject is shared across multiple departments (assign to primary)
+# - Subject is orphaned (no longer in use but has historical data)
+# - Subject is interdisciplinary (assign to primary teaching department)
+#
+# Validation Rules:
+# - subject_id must exist in subjects table
+# - department_id must exist in departments table
+# - Each subject must belong to exactly one department
