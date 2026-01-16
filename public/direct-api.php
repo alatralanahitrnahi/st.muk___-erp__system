@@ -90,6 +90,12 @@ function rateLimit($userId) {
 }
 
 // Parse request
+
+// Public health check
+if ($method === "GET" && $path === "/health") {
+    include __DIR__ . "/health.php";
+    exit;
+}
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = str_replace('/direct-api.php', '', $path);
