@@ -61,6 +61,13 @@ elseif ($method === 'GET' && $path === '/api/programs') {
     ')->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode(['success' => true, 'data' => $programs]);
 }
+elseif (strpos($path, '/api/workflows') === 0) {
+    // Proxy to workflow API
+    $workflowPath = str_replace('/api/workflows', '/workflows', $path);
+    $_SERVER['REQUEST_URI'] = $workflowPath;
+    include __DIR__ . '/workflow-api.php';
+    exit;
+}
 else {
     http_response_code(404);
     echo json_encode(['success' => false, 'message' => 'Endpoint not found']);

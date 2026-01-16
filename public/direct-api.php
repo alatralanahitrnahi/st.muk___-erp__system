@@ -359,7 +359,7 @@ if ($method === 'GET' && $path === '/api/attendance') {
     }
     
     $sql = "
-        SELECT ar.*, s.roll_number, u.name as student_name
+        SELECT ar.*, s.admission_number, u.name as student_name
         FROM attendance_records ar
         JOIN students s ON ar.student_id = s.id
         JOIN users u ON s.user_id = u.id
@@ -403,7 +403,7 @@ if ($method === 'GET' && $path === '/api/results') {
     }
     
     $sql = "
-        SELECT er.*, s.roll_number, u.name as student_name, sub.name as subject_name
+        SELECT er.*, s.admission_number, u.name as student_name, sub.name as subject_name
         FROM exam_results er
         JOIN students s ON er.student_id = s.id
         JOIN users u ON s.user_id = u.id
@@ -437,8 +437,9 @@ if ($method === 'GET' && $path === '/api/fees') {
     }
     
     $sql = "
-        SELECT sf.*, s.roll_number, u.name as student_name,
-               (sf.total_amount - sf.paid_amount) as balance
+        SELECT sf.*, s.admission_number, u.name as student_name,
+               sf.balance_amount as balance, sf.net_amount as total_amount,
+               sf.status as payment_status
         FROM student_fees sf
         JOIN students s ON sf.student_id = s.id
         JOIN users u ON s.user_id = u.id
@@ -448,7 +449,7 @@ if ($method === 'GET' && $path === '/api/fees') {
     $params = [$departmentId];
     
     if ($status) {
-        $sql .= " AND sf.payment_status = ?";
+        $sql .= " AND sf.status = ?";
         $params[] = $status;
     }
     

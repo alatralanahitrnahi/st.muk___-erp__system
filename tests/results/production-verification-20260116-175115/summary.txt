@@ -1,0 +1,13 @@
+FAIL: Super Admin login - Authentication failed
+FAIL: Principal login - Authentication failed
+FAIL: Faculty login - Authentication failed
+FAIL: Student login - Authentication failed
+PASS: Department switch performance (<300ms)
+FAIL: Department data isolation - Same data returned
+PASS: Unauthorized access handling
+PASS: Workflow creation
+PASS: Workflow state transition
+PASS: Average API response time (<500ms)
+PASS: Concurrent request handling
+PASS: React app loads
+PASS: React assets path correct

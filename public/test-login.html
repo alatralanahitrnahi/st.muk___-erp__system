@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <h1>PVGS ERP - Login Test</h1>
+    
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" value="admin@pvgs.edu" required>
+        <input type="password" id="password" placeholder="Password" value="password123" required>
+        <button type="submit">Login</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        const form = document.getElementById('loginForm');
+        const result = document.getElementById('result');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            result.innerHTML = 'Logging in...';
+            result.className = '';
+            
+            try {
+                console.log('Attempting login...');
+                
+                const response = await fetch('/direct-api.php/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    result.className = 'success';
+                    result.innerHTML = `
+                        <strong>✅ Login Successful!</strong><br>
+                        User: ${data.data.user.name}<br>
+                        Email: ${data.data.user.email}<br>
+                        Type: ${data.data.user.user_type}<br>
+                        Token: ${data.data.token.substring(0, 20)}...<br>
+                        <br>
+                        <a href="/app/">Go to React App</a>
+                    `;
+                } else {
+                    result.className = 'error';
+                    result.innerHTML = `❌ Login Failed: ${data.message}`;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                result.className = 'error';
+                result.innerHTML = `❌ Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

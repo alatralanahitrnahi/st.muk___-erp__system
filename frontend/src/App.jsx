@@ -26,7 +26,7 @@ function ProtectedRoute({ children, allowedRoles }) {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/app">
         <Routes>
           <Route path="/login" element={<Login />} />
           

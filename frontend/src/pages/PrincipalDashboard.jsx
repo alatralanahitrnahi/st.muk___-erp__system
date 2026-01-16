@@ -2,10 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { students, departments } from '../services/api';
 import { useAuthStore } from '../store/auth';
 import { useState } from 'react';
+import WorkflowApprovals from '../components/WorkflowApprovals';
+import Reports from '../components/Reports';
 
 export default function PrincipalDashboard() {
   const { user, department, setDepartment, logout } = useAuthStore();
   const [selectedDept, setSelectedDept] = useState(null);
+  const [activeTab, setActiveTab] = useState('approvals');
   
   const { data: depts } = useQuery({
     queryKey: ['departments'],
@@ -51,6 +54,55 @@ export default function PrincipalDashboard() {
       </nav>
       
       <div className="max-w-7xl mx-auto p-6">
+        {/* Tabs */}
+        <div className="mb-6 border-b">
+          <div className="flex gap-4">
+            <button
+              onClick={() => setActiveTab('approvals')}
+              className={`px-4 py-2 font-medium border-b-2 transition ${activeTab === 'approvals' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-gray-800'}`}
+            >
+              Workflow Approvals
+            </button>
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={`px-4 py-2 font-medium border-b-2 transition ${activeTab === 'reports' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-gray-800'}`}
+            >
+              Reports & Analytics
+            </button>
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`px-4 py-2 font-medium border-b-2 transition ${activeTab === 'overview' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-gray-800'}`}
+            >
+              Overview
+            </button>
+          </div>
+        </div>
+
+        {/* Approvals Tab */}
+        {activeTab === 'approvals' && selectedDept && (
+          <WorkflowApprovals departmentId={selectedDept} />
+        )}
+
+        {activeTab === 'approvals' && !selectedDept && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+            <p className="text-yellow-800">Please select a department to view approvals</p>
+          </div>
+        )}
+
+        {/* Reports Tab */}
+        {activeTab === 'reports' && selectedDept && (
+          <Reports departmentId={selectedDept} />
+        )}
+
+        {activeTab === 'reports' && !selectedDept && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+            <p className="text-yellow-800">Please select a department to view reports</p>
+          </div>
+        )}
+
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
+          <>
         <div className="grid grid-cols-3 gap-6 mb-6">
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="text-gray-600 text-sm font-semibold">Total Departments</h3>
@@ -92,6 +144,8 @@ export default function PrincipalDashboard() {
               </table>
             </div>
           </div>
+        )}
+          </>
         )}
       </div>
     </div>

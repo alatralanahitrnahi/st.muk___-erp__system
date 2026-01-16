@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Test</title>
+</head>
+<body>
+    <h1>React Loading Test</h1>
+    <div id="test">If you see this, React is NOT loading</div>
+    
+    <script type="module">
+        document.getElementById('test').innerHTML = 'React/JS is working!';
+        console.log('JavaScript is running');
+        
+        // Test if we can load the React bundle
+        import('/app/assets/index-7b3b8b40.js')
+            .then(() => console.log('React bundle loaded'))
+            .catch(err => console.error('React bundle failed:', err));
+    </script>
+</body>
+</html>
