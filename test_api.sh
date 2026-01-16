@@ -1,51 +1,78 @@
 #!/bin/bash
 
-echo "=== PVGS ERP API Test ==="
+API_URL="http://localhost:8000/api"
+echo "🧪 Manual API Testing"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Start Laravel server in background
-echo "Starting Laravel server..."
-cd /workspaces/st.muk___-erp__system
-php artisan serve --host=0.0.0.0 --port=8000 &
-SERVER_PID=$!
-
-# Wait for server to start
-sleep 3
-
-echo "Testing API endpoints..."
-echo ""
-
-# Test 1: Register a user
-echo "1. Testing user registration:"
-curl -s -X POST http://localhost:8000/api/register \
+# Test 1: Login as Admin
+echo "1️⃣  Testing Admin Login..."
+ADMIN_RESPONSE=$(curl -s -X POST "$API_URL/login" \
   -H "Content-Type: application/json" \
-  -d '{
-    "name": "Test User",
-    "email": "test@example.com",
-    "password": "password123",
-    "password_confirmation": "password123"
-  }' | head -c 200
+  -d '{"email":"admin@pvgs.edu","password":"password123"}')
+
+echo "$ADMIN_RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$ADMIN_RESPONSE"
+ADMIN_TOKEN=$(echo "$ADMIN_RESPONSE" | grep -o '"token":"[^"]*' | cut -d'"' -f4)
+
+if [ -n "$ADMIN_TOKEN" ]; then
+    echo "✅ Admin login successful"
+    echo "Token: ${ADMIN_TOKEN:0:20}..."
+else
+    echo "❌ Admin login failed"
+    exit 1
+fi
+
 echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Test 2: Get programs
-echo "2. Testing programs endpoint:"
-curl -s -X GET http://localhost:8000/api/programs/public | head -c 200
-echo ""
+# Test 2: Get User Info
+echo "2️⃣  Testing Get User Info..."
+USER_RESPONSE=$(curl -s -X GET "$API_URL/user" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H "Accept: application/json")
+
+echo "$USER_RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$USER_RESPONSE"
 echo ""
 
-# Test 3: Get departments
-echo "3. Testing departments endpoint:"
-curl -s -X GET http://localhost:8000/api/departments/public | head -c 200
-echo ""
+# Test 3: Get Departments
+echo "3️⃣  Testing Get Departments..."
+DEPT_RESPONSE=$(curl -s -X GET "$API_URL/departments" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H "Accept: application/json")
+
+echo "$DEPT_RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$DEPT_RESPONSE"
 echo ""
 
-# Stop server
-kill $SERVER_PID 2>/dev/null
+# Test 4: Get Students
+echo "4️⃣  Testing Get Students..."
+STUDENTS_RESPONSE=$(curl -s -X GET "$API_URL/students" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H "Accept: application/json")
 
-echo "API test completed!"
+echo "$STUDENTS_RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$STUDENTS_RESPONSE"
 echo ""
-echo "✓ Phase 1 & 2 implementation is ready"
-echo "✓ Database setup complete"
-echo "✓ Core controllers implemented"
-echo "✓ API routes configured"
+
+# Test 5: Login as Student
+echo "5️⃣  Testing Student Login..."
+STUDENT_RESPONSE=$(curl -s -X POST "$API_URL/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"student1@pvgs.edu","password":"password123"}')
+
+echo "$STUDENT_RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$STUDENT_RESPONSE"
+STUDENT_TOKEN=$(echo "$STUDENT_RESPONSE" | grep -o '"token":"[^"]*' | cut -d'"' -f4)
+
+if [ -n "$STUDENT_TOKEN" ]; then
+    echo "✅ Student login successful"
+else
+    echo "❌ Student login failed"
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ Manual API tests completed!"
+echo ""
+echo "Next steps:"
+echo "  1. Start Laravel server: php artisan serve"
+echo "  2. Run this script: bash test_api.sh"
+echo ""
