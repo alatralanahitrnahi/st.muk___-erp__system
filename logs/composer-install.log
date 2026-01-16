@@ -1,0 +1,37 @@
+Xdebug: [Step Debug] Could not connect to debugging client. Tried: localhost:9000 (through xdebug.client_host/xdebug.client_port).
+Installing dependencies from lock file (including require-dev)
+Verifying lock file contents can be installed on current platform.
+Nothing to install, update or remove
+Generating optimized autoload files
+Class App\Http\Middleware\CheckPermission located in ./app/Http/Middleware/PermissionMiddleware.php does not comply with psr-4 autoloading standard (rule: App\ => ./app). Skipping.
+Class App\Http\Middleware\CheckRole located in ./app/Http/Middleware/PermissionMiddleware.php does not comply with psr-4 autoloading standard (rule: App\ => ./app). Skipping.
+Class App\Http\Controllers\Api\V1\DepartmentResultController located in ./app/Http/Controllers/Api/V1/DepartmentResourceControllers.php does not comply with psr-4 autoloading standard (rule: App\ => ./app). Skipping.
+Class App\Http\Controllers\Api\V1\DepartmentFeeController located in ./app/Http/Controllers/Api/V1/DepartmentResourceControllers.php does not comply with psr-4 autoloading standard (rule: App\ => ./app). Skipping.
+Class App\Http\Controllers\Api\AuthController located in ./app/Http/Controllers/Api/EnhancedAuthController.php does not comply with psr-4 autoloading standard (rule: App\ => ./app). Skipping.
+> Illuminate\Foundation\ComposerScripts::postAutoloadDump
+> @php artisan package:discover --ansi
+Xdebug: [Step Debug] Could not connect to debugging client. Tried: localhost:9000 (through xdebug.client_host/xdebug.client_port).
+
+   Illuminate\Contracts\Container\BindingResolutionException 
+
+  Target class [cache] does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+    910▕ 
+    911▕         try {
+    912▕             $reflector = new ReflectionClass($concrete);
+    913▕         } catch (ReflectionException $e) {
+  ➜ 914▕             throw new BindingResolutionException("Target class [$concrete] does not exist.", 0, $e);
+    915▕         }
+    916▕ 
+    917▕         // If the type is not instantiable, the developer is attempting to resolve
+    918▕         // an abstract type such as an Interface or Abstract Class and there is
+
+  1   [internal]:0
+      Illuminate\Foundation\Application::Illuminate\Foundation\{closure}(Object(Spatie\Permission\PermissionServiceProvider))
+      [2m+22 vendor frames [22m
+
+  24  [internal]:0
+      Illuminate\Foundation\Application::Illuminate\Foundation\{closure}(Object(Spatie\Permission\PermissionServiceProvider))
+
+Script @php artisan package:discover --ansi handling the post-autoload-dump event returned with error code 1

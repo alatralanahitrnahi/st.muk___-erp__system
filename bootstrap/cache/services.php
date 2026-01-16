@@ -7,7 +7,6 @@
     3 => 'Carbon\\Laravel\\ServiceProvider',
     4 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     5 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    6 => 'Spatie\\Permission\\PermissionServiceProvider',
   ),
   'eager' => 
   array (
@@ -15,7 +14,6 @@
     1 => 'Carbon\\Laravel\\ServiceProvider',
     2 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     3 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    4 => 'Spatie\\Permission\\PermissionServiceProvider',
   ),
   'deferred' => 
   array (

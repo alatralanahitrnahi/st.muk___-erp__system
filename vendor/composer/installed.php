@@ -3,7 +3,7 @@
         'name' => 'pvgs/pvgs-erp',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '4415021b9e508c492cae42486c9b8a6767f2f2d4',
+        'reference' => '84f2ebac176030868bea89c81f9d59f3c17e7879',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -851,7 +851,7 @@
         'pvgs/pvgs-erp' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4415021b9e508c492cae42486c9b8a6767f2f2d4',
+            'reference' => '84f2ebac176030868bea89c81f9d59f3c17e7879',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1024,15 +1024,6 @@
             'install_path' => __DIR__ . '/../sebastian/version',
             'aliases' => array(),
             'dev_requirement' => true,
-        ),
-        'spatie/laravel-permission' => array(
-            'pretty_version' => '5.11.1',
-            'version' => '5.11.1.0',
-            'reference' => '7090824cca57e693b880ce3aaf7ef78362e28bbd',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../spatie/laravel-permission',
-            'aliases' => array(),
-            'dev_requirement' => false,
         ),
         'symfony/console' => array(
             'pretty_version' => 'v6.4.31',
