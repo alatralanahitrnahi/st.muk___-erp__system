@@ -13,34 +13,33 @@ class DepartmentAttendanceController extends Controller
 
     public function index(Request $request, int $departmentId)
     {
-        $dateFrom = $request->get('date_from', now()->subDays(30)->format('Y-m-d'));
-        $dateTo = $request->get('date_to', now()->format('Y-m-d'));
-        $perPage = $request->get('per_page', 15);
-
-        $attendance = DB::table('attendance')
-            ->join('students', 'attendance.student_id', '=', 'students.id')
+        $date = $request->get('date', now()->format('Y-m-d'));
+        
+        $attendance = DB::table('attendance_records')
+            ->join('students', 'attendance_records.student_id', '=', 'students.id')
             ->join('users', 'students.user_id', '=', 'users.id')
-            ->where('attendance.department_id', $departmentId)
-            ->whereBetween('attendance.date', [$dateFrom, $dateTo])
-            ->select('attendance.*', 'users.name as student_name')
-            ->paginate($perPage);
+            ->where('students.department_id', $departmentId)
+            ->where('attendance_records.date', $date)
+            ->select('attendance_records.*', 'users.name as student_name', 'students.admission_number')
+            ->get();
 
-        return $this->paginatedResponse($attendance, 'Attendance retrieved successfully', $departmentId);
+        return $this->successResponse($attendance, 'Attendance retrieved successfully', $departmentId);
     }
 
     public function report(Request $request, int $departmentId)
     {
         $dateFrom = $request->get('date_from', now()->subDays(30)->format('Y-m-d'));
         $dateTo = $request->get('date_to', now()->format('Y-m-d'));
-
-        $report = DB::table('attendance')
-            ->where('department_id', $departmentId)
-            ->whereBetween('date', [$dateFrom, $dateTo])
+        
+        $report = DB::table('attendance_records')
+            ->join('students', 'attendance_records.student_id', '=', 'students.id')
+            ->where('students.department_id', $departmentId)
+            ->whereBetween('attendance_records.date', [$dateFrom, $dateTo])
             ->select(
                 DB::raw('COUNT(*) as total_records'),
                 DB::raw('SUM(CASE WHEN status = "present" THEN 1 ELSE 0 END) as present_count'),
                 DB::raw('SUM(CASE WHEN status = "absent" THEN 1 ELSE 0 END) as absent_count'),
-                DB::raw('ROUND(SUM(CASE WHEN status = "present" THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) as attendance_rate')
+                DB::raw('ROUND(SUM(CASE WHEN status = "present" THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) as attendance_percentage')
             )
             ->first();
 

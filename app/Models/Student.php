@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasVisibilityScope;
+use App\Traits\HasWorkflow;
 
 class Student extends Model
 {
-    use HasFactory, HasVisibilityScope;
+    use HasFactory, HasVisibilityScope, HasWorkflow;
 
     protected $fillable = [
         'user_id',
         'program_id',
         'category_id',
+        'department_id',
         'admission_number',
         'prn_number',
         'status',

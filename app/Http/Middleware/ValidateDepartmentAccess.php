@@ -27,7 +27,7 @@ class ValidateDepartmentAccess
         }
 
         // Super-admin and principal have access to all departments
-        if (in_array($user->role, ['super-admin', 'principal'])) {
+        if (in_array($user->user_type, ['super-admin', 'principal'])) {
             $request->merge(['validated_department_id' => $departmentId]);
             return $next($request);
         }
