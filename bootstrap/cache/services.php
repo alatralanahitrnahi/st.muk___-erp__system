@@ -2,24 +2,20 @@
   'providers' => 
   array (
     0 => 'Laravel\\Sail\\SailServiceProvider',
-    1 => 'Laravel\\Sanctum\\SanctumServiceProvider',
-    2 => 'Laravel\\Tinker\\TinkerServiceProvider',
-    3 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-    4 => 'Carbon\\Laravel\\ServiceProvider',
-    5 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    6 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    7 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
-    8 => 'Spatie\\Permission\\PermissionServiceProvider',
+    1 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    2 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    3 => 'Carbon\\Laravel\\ServiceProvider',
+    4 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    5 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    6 => 'Spatie\\Permission\\PermissionServiceProvider',
   ),
   'eager' => 
   array (
-    0 => 'Laravel\\Sanctum\\SanctumServiceProvider',
-    1 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-    2 => 'Carbon\\Laravel\\ServiceProvider',
-    3 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    4 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    5 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
-    6 => 'Spatie\\Permission\\PermissionServiceProvider',
+    0 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    1 => 'Carbon\\Laravel\\ServiceProvider',
+    2 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    3 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    4 => 'Spatie\\Permission\\PermissionServiceProvider',
   ),
   'deferred' => 
   array (

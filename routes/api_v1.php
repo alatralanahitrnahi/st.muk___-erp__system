@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\V1\DepartmentFeeController;
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('v1')->middleware(['auth:sanctum', 'validate.department.access'])->group(function () {
+Route::prefix('v1')->middleware(['auth', 'validate.department.access'])->group(function () {
     
     // Department Students
     Route::prefix('departments/{departmentId}')->group(function () {
@@ -40,7 +40,7 @@ Route::prefix('v1')->middleware(['auth:sanctum', 'validate.department.access'])-
 | Will be removed in version 2.0
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth')->group(function () {
     
     // Legacy Students - Optional department_id parameter
     Route::get('/students', function (Illuminate\Http\Request $request) {

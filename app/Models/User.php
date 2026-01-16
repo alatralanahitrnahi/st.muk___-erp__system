@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use App\Traits\HasDepartments;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasDepartments;
+    use HasFactory, Notifiable, HasDepartments;
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +23,8 @@ class User extends Authenticatable
         'password',
         'user_type',
         'is_active',
-        'primary_department_id',
+        'role',
+        'designation',
     ];
 
     /**
@@ -48,47 +48,23 @@ class User extends Authenticatable
         'is_active' => 'boolean',
     ];
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'user_roles');
-    }
-
-    public function permissions()
-    {
-        // Get permissions through roles only - no direct user permissions
-        return $this->roles()->with('permissions')->get()->pluck('permissions')->flatten();
-    }
-
     public function hasRole($role)
     {
-        return $this->roles()->where('name', $role)->exists();
+        return $this->role === $role;
     }
 
     public function hasPermission($permission)
     {
-        // Check permissions through roles only
-        return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
-            $query->where('name', $permission);
-        })->exists();
-    }
-
-    public function assignRole($role)
-    {
-        if (is_string($role)) {
-            $role = Role::where('name', $role)->first();
-        }
-        if ($role && !$this->hasRole($role->name)) {
-            $this->roles()->attach($role->id);
-        }
-    }
-
-    public function removeRole($role)
-    {
-        if (is_string($role)) {
-            $role = Role::where('name', $role)->first();
-        }
-        if ($role) {
-            $this->roles()->detach($role);
-        }
+        // Simple permission check based on role
+        $rolePermissions = [
+            'super-admin' => ['*'],
+            'principal' => ['view_all', 'approve_all', 'manage_all'],
+            'registrar' => ['view_department', 'manage_department', 'approve_department'],
+            'faculty' => ['view_students', 'mark_attendance', 'enter_results'],
+            'student' => ['view_own', 'view_results', 'pay_fees'],
+        ];
+        
+        $permissions = $rolePermissions[$this->role] ?? [];
+        return in_array('*', $permissions) || in_array($permission, $permissions);
     }
 }

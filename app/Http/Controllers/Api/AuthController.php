@@ -47,18 +47,18 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $token = $user->createToken('API Token')->plainTextToken;
-
+        
+        // Simple session-based auth (no tokens)
         return response()->json([
+            'success' => true,
             'user' => $user,
-            'token' => $token,
+            'message' => 'Login successful',
         ]);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-
+        Auth::logout();
         return response()->json(['message' => 'Logged out successfully']);
     }
 }
