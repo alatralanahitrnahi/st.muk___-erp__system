@@ -1,37 +1,62 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useAuthStore } from './store';
+import { useAuthStore } from './store/auth';
 import Login from './pages/Login';
-import './index.css';
+import PrincipalDashboard from './pages/PrincipalDashboard';
+import FacultyDashboard from './pages/FacultyDashboard';
+import StudentDashboard from './pages/StudentDashboard';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1, refetchOnWindowFocus: false }
+  }
+});
 
-function ProtectedRoute({ children }) {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return isAuthenticated ? children : <Navigate to="/login" />;
+function ProtectedRoute({ children, allowedRoles }) {
+  const user = useAuthStore(state => state.user);
+  
+  if (!user) return <Navigate to="/login" replace />;
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
 }
 
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/*"
-            element={
-              <ProtectedRoute>
-                <div className="p-8">
-                  <h1 className="text-2xl font-bold">Dashboard Coming Soon</h1>
-                  <p className="mt-2 text-gray-600">React frontend is being built...</p>
-                </div>
-              </ProtectedRoute>
-            }
-          />
+          
+          <Route path="/principal" element={
+            <ProtectedRoute allowedRoles={['principal', 'super-admin']}>
+              <PrincipalDashboard />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/super-admin" element={
+            <ProtectedRoute allowedRoles={['super-admin']}>
+              <PrincipalDashboard />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/faculty" element={
+            <ProtectedRoute allowedRoles={['faculty']}>
+              <FacultyDashboard />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/student" element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <StudentDashboard />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
   );
 }
-
-export default App;

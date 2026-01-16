@@ -1,114 +1,91 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore, useDepartmentStore } from '../store';
-import api from '../lib/api';
+import { auth } from '../services/api';
+import { useAuthStore } from '../store/auth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
   const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
-  const setDepartments = useDepartmentStore((state) => state.setDepartments);
-  const setActiveDepartment = useDepartmentStore((state) => state.setActiveDepartment);
+  const login = useAuthStore(state => state.login);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
-
+    setError('');
+    
     try {
-      const response = await api.post('/auth/login', { email, password });
-      
-      if (response.success) {
-        const { token, user } = response.data;
-        
-        login(user, token);
-        
-        if (user.departments?.length > 0) {
-          setDepartments(user.departments);
-          const primary = user.departments.find(d => d.is_primary) || user.departments[0];
-          setActiveDepartment(primary);
-        }
-        
-        const roleRoutes = {
-          'super-admin': '/admin',
-          'principal': '/principal',
-          'registrar': '/registrar',
-          'faculty': '/faculty',
-          'student': '/student',
-        };
-        
-        navigate(roleRoutes[user.user_type] || '/dashboard');
+      const { data } = await auth.login(email, password);
+      if (data.success) {
+        login(data.data.user, data.data.token);
+        navigate(`/${data.data.user.role}`);
+      } else {
+        setError(data.message || 'Login failed');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      setError('Invalid credentials');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-lg">
-        <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">
-            PVGS ERP System
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Sign in to your account
-          </p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
+      <div className="bg-white p-8 rounded-lg shadow-2xl w-96">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">PVGS ERP</h1>
+          <p className="text-gray-600">College Management System</p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-              {error}
-            </div>
-          )}
-          
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                placeholder="admin@pvgs.edu"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                placeholder="••••••••"
-              />
-            </div>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
           </div>
-
+        )}
+        
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              placeholder="user@pvgs.edu"
+              required
+            />
+          </div>
+          
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+        
+        <div className="mt-6 text-sm text-gray-600 bg-gray-50 p-3 rounded">
+          <p className="font-semibold mb-1">Test Accounts:</p>
+          <p>• principal@pvgs.edu</p>
+          <p>• faculty1@pvgs.edu</p>
+          <p>• student1@pvgs.edu</p>
+          <p className="mt-1 text-xs">Password: password123</p>
+        </div>
       </div>
     </div>
   );
