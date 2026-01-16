@@ -119,5 +119,10 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE'),
     ],
+    'aliases' => [
+    // ...
+    'File' => Illuminate\Support\Facades\File::class,
+],
+
 
 ];

@@ -1,56 +1,59 @@
 #!/bin/bash
+set -e
 
 echo "🚀 Setting up PVGS ERP Development Environment..."
 
 # Update packages
-sudo apt-get update -y
+apt-get update && apt-get install -y \
+    libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+    libzip-dev unzip git curl zip \
+    npm \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install required packages
-sudo apt-get install -y git curl zip unzip
+# Install PHP extensions required by Laravel
+docker-php-ext-configure gd --with-freetype --with-jpeg
+docker-php-ext-install gd mbstring xml bcmath pdo_mysql zip
 
-# Install Composer
-if ! command -v composer &> /dev/null; then
+# Install Composer if not present
+if ! command -v composer >/dev/null 2>&1; then
     echo "📥 Installing Composer..."
-    curl -sS https://getcomposer.org/installer | php
-    sudo mv composer.phar /usr/local/bin/composer
-    sudo chmod +x /usr/local/bin/composer
+    EXPECTED_SIGNATURE="$(curl -s https://composer.github.io/installer.sig)"
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
+        >&2 echo 'ERROR: Invalid Composer installer signature'
+        exit 1
+    fi
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    php -r "unlink('composer-setup.php');"
 fi
 
-# Configure Composer
-composer config --global process-timeout 2000
-composer global require laravel/installer
+# Ensure project dependencies
+if [ -f "composer.json" ]; then
+    echo "📦 Installing PHP dependencies..."
+    composer install --no-interaction --prefer-dist
+fi
 
-# Add to PATH
-echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> ~/.bashrc
+# Setup .env and generate app key
+if [ ! -f ".env" ]; then
+    cp .env.example .env
+    php artisan key:generate
+fi
 
-# Install MCP packages
+# Optional: MCP packages
 echo "📦 Installing MCP packages..."
-npm install -g @modelcontextprotocol/server-filesystem
-npm install -g @modelcontextprotocol/server-sequential-thinking
-npm install -g @modelcontextprotocol/server-memory
-npm install -g @modelcontextprotocol/server-git
-npm install -g @benborla29/mcp-server-mysql
+npm install -g @modelcontextprotocol/server-filesystem \
+    @modelcontextprotocol/server-sequential-thinking \
+    @modelcontextprotocol/server-memory \
+    @modelcontextprotocol/server-git \
+    @benborla29/mcp-server-mysql
 
-# Setup MCP config
-mkdir -p ~/.config/Code/User/globalStorage/github.copilot-chat
+# Setup MCP config if exists
 if [ -f ".devcontainer/mcp.json" ]; then
+    mkdir -p ~/.config/Code/User/globalStorage/github.copilot-chat
     cp .devcontainer/mcp.json ~/.config/Code/User/globalStorage/github.copilot-chat/mcp.json
     chmod 600 ~/.config/Code/User/globalStorage/github.copilot-chat/mcp.json
 fi
-
-# Git config
-git config --global core.autocrlf input
-git config --global init.defaultBranch main
-
-# Create project structure
-mkdir -p app/Models/{Academic,Financial,User,Attendance,Examination}
-mkdir -p app/Http/Controllers/Api/{Academic,Financial,Attendance,Examination}
-mkdir -p app/Services
-mkdir -p app/Repositories
-mkdir -p app/Http/Requests
-mkdir -p database/migrations/{2024_01_foundation,2024_02_user_management,2024_03_academic,2024_04_attendance,2024_05_financial,2024_06_examination}
-
-# Pull GitHub MCP Docker image
-docker pull ghcr.io/github/github-mcp-server
 
 echo "✅ Setup complete!"

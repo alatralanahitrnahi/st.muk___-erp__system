@@ -1,66 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PVGS ERP - Secure Login</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        .logo { text-align: center; margin-bottom: 2rem; }
-        .logo h1 { color: #4f46e5; font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .logo p { color: #6b7280; font-size: 0.9rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 500; }
-        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; }
-        .form-group input:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-        .btn { width: 100%; padding: 0.75rem; background: #4f46e5; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-bottom: 1rem; }
-        .btn:hover { background: #4338ca; }
-        .btn:disabled { background: #9ca3af; cursor: not-allowed; }
-        .error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; }
-        .quick-login { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-top: 1rem; }
-        .quick-btn { padding: 0.5rem; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; text-align: center; font-size: 0.8rem; }
-        .quick-btn:hover { background: #e5e7eb; }
-        .credentials { background: #f9fafb; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
-        .credentials h4 { color: #374151; margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .credentials p { color: #6b7280; font-size: 0.8rem; margin-bottom: 0.25rem; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: #4f46e5;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .btn:hover {
+            background: #4338ca;
+        }
+
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .quick-login {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .quick-btn {
+            padding: 0.5rem;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .quick-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .credentials {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .credentials h4 {
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .credentials p {
+            color: #6b7280;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="logo">
             <h1>🎓 PVGS ERP</h1>
             <p>Secure Academic Management System</p>
         </div>
-        
+
         <form id="loginForm">
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" required autocomplete="email">
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required autocomplete="current-password">
             </div>
-            
+
             <div id="errorMessage" class="error" style="display: none;"></div>
-            
+
             <button type="submit" class="btn" id="loginBtn">
                 <span id="loginText">Sign In</span>
                 <span id="loadingText" style="display: none;">Signing in...</span>
             </button>
         </form>
-        
+
         <div class="quick-login">
             <button type="button" class="quick-btn" onclick="quickLogin('principal')">Principal</button>
             <button type="button" class="quick-btn" onclick="quickLogin('registrar')">Registrar</button>
             <button type="button" class="quick-btn" onclick="quickLogin('faculty')">Faculty</button>
             <button type="button" class="quick-btn" onclick="quickLogin('student')">Student</button>
         </div>
-        
+
         <div class="credentials">
             <h4>Demo Credentials:</h4>
             <p>Super Admin: system@pvgs.edu / password123</p>
@@ -78,33 +196,33 @@
         const loginBtn = document.getElementById('loginBtn');
         const loginText = document.getElementById('loginText');
         const loadingText = document.getElementById('loadingText');
-        
+
         // Input sanitization
         function sanitizeInput(input) {
-            return input.replace(/[<>\"'&]/g, function(match) {
+            return input.replace(/[<>\"'&]/g, function (match) {
                 const map = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', '&': '&amp;' };
                 return map[match];
             });
         }
-        
+
         // Show error message
         function showError(message) {
             errorMessage.textContent = sanitizeInput(message);
             errorMessage.style.display = 'block';
         }
-        
+
         // Hide error message
         function hideError() {
             errorMessage.style.display = 'none';
         }
-        
+
         // Set loading state
         function setLoading(loading) {
             loginBtn.disabled = loading;
             loginText.style.display = loading ? 'none' : 'inline';
             loadingText.style.display = loading ? 'inline' : 'none';
         }
-        
+
         // Get user type from email
         function getUserType(email) {
             if (email.includes('super') || email.includes('system')) return 'super-admin';
@@ -113,7 +231,7 @@
             if (email.includes('faculty') || email.includes('rajesh') || email.includes('sunita') || email.includes('amit')) return 'faculty';
             return 'student';
         }
-        
+
         // Redirect user based on type
         function redirectUser(userType, userId) {
             const routes = {
@@ -123,51 +241,67 @@
                 'faculty': '/secure_faculty.html',
                 'student': '/secure_student.html'
             };
-            
+
             if (userType === 'student') {
                 localStorage.setItem('student_id', userId);
             }
-            
+
             window.location.href = routes[userType] || '/secure_admin.html';
         }
-        
-        // Login function
+
+        // Login function - API authentication
         async function login(email, password) {
             hideError();
             setLoading(true);
-            
+
             try {
-                // Simulate authentication (replace with actual API call)
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
                 if (!email || !password) {
                     throw new Error('Please enter both email and password');
                 }
-                
-                // Mock authentication - replace with secure backend validation
-                const userType = getUserType(email);
-                const userId = Math.floor(Math.random() * 1000) + 1;
-                
-                // Store secure session data
+
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({email, password})
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                // Store session data
+                const user = data.user;
+                const role = user.roles && user.roles.length > 0 ? user.roles[0].name : user.user_type;
+
                 const sessionData = {
-                    id: userId,
-                    email: sanitizeInput(email),
-                    userType: userType,
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    userType: role,
                     loginTime: new Date().toISOString()
                 };
-                
+
                 localStorage.setItem('secure_session', JSON.stringify(sessionData));
-                localStorage.setItem('session_token', 'secure_' + Date.now());
-                
-                redirectUser(userType, userId);
-                
+                localStorage.setItem('session_token', data.token);
+
+                if (role === 'student') {
+                    localStorage.setItem('student_id', user.id);
+                }
+
+                redirectUser(role, user.id);
+
             } catch (error) {
                 showError(error.message);
             } finally {
                 setLoading(false);
             }
         }
-        
+
         // Quick login function
         function quickLogin(type) {
             const credentials = {
@@ -177,7 +311,7 @@
                 faculty: { email: 'rajesh.kumar@pvgs.edu', password: 'password123' },
                 student: { email: 'aarav.sharma@pvgs.edu', password: 'password123' }
             };
-            
+
             const cred = credentials[type];
             if (cred) {
                 document.getElementById('email').value = cred.email;
@@ -185,19 +319,20 @@
                 login(cred.email, cred.password);
             }
         }
-        
+
         // Form submission handler
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             login(email, password);
         });
-        
+
         // Clear any existing session on page load
         localStorage.removeItem('secure_session');
         localStorage.removeItem('session_token');
         localStorage.removeItem('student_id');
     </script>
 </body>
+
 </html>

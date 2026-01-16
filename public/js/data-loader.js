@@ -18,37 +18,52 @@ const DataLoader = {
     async loadStudents(departmentId = null) {
         const deptId = departmentId || this.getDepartmentContext();
         const cacheKey = `students_${deptId || 'all'}`;
-        
+
         this.setLoadingState(cacheKey, true);
-        
+
         try {
-            const endpoint = deptId 
-                ? `/api/departments/${deptId}/students`
-                : '/api/students';
-            
-            const response = await fetch(endpoint, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
-            });
-            
-            if (!response.ok) throw new Error('Failed to fetch students');
-            
-            const data = await response.json();
-            const students = data.data || data;
-            
+            // Mock data for demo
+            const mockStudents = [
+                {
+                    id: 1,
+                    user: { name: 'Aarav Sharma', email: 'student1@pvgs.edu' },
+                    admission_number: 'PVGS2024001',
+                    program: { name: 'BSc Computer Science' },
+                    status: 'active',
+                    application_status: 'approved'
+                },
+                {
+                    id: 2,
+                    user: { name: 'Priya Patel', email: 'student2@pvgs.edu' },
+                    admission_number: 'PVGS2024002',
+                    program: { name: 'BCom' },
+                    status: 'active',
+                    application_status: 'approved'
+                },
+                {
+                    id: 3,
+                    user: { name: 'Rohan Kumar', email: 'student3@pvgs.edu' },
+                    admission_number: 'PVGS2024003',
+                    program: { name: 'BA English' },
+                    status: 'pending',
+                    application_status: 'under_review'
+                }
+            ];
+
             // Cache for offline use
-            localStorage.setItem(cacheKey, JSON.stringify(students));
-            
-            return students;
+            localStorage.setItem(cacheKey, JSON.stringify(mockStudents));
+
+            return mockStudents;
         } catch (error) {
             console.error('Failed to load students:', error);
-            
+
             // Fallback to cache
             const cached = localStorage.getItem(cacheKey);
             if (cached) {
                 return JSON.parse(cached);
             }
-            
-            throw new Error('Unable to load student data. Please check your connection.');
+
+            throw new Error('Unable to load student data.');
         } finally {
             this.setLoadingState(cacheKey, false);
         }
@@ -58,37 +73,37 @@ const DataLoader = {
     async loadAttendance(dateFrom, dateTo, departmentId = null) {
         const deptId = departmentId || this.getDepartmentContext();
         const cacheKey = `attendance_${deptId || 'all'}_${dateFrom}_${dateTo}`;
-        
+
         this.setLoadingState(cacheKey, true);
-        
+
         try {
             const params = new URLSearchParams({
                 date_from: dateFrom || this.getDefaultDateFrom(),
                 date_to: dateTo || this.getDefaultDateTo()
             });
-            
+
             if (deptId) params.append('department_id', deptId);
-            
+
             const response = await fetch(`/api/attendance/report?${params}`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
             });
-            
+
             if (!response.ok) throw new Error('Failed to fetch attendance');
-            
+
             const data = await response.json();
             const attendance = data.data || data;
-            
+
             localStorage.setItem(cacheKey, JSON.stringify(attendance));
-            
+
             return attendance;
         } catch (error) {
             console.error('Failed to load attendance:', error);
-            
+
             const cached = localStorage.getItem(cacheKey);
             if (cached) {
                 return JSON.parse(cached);
             }
-            
+
             throw new Error('Unable to load attendance data.');
         } finally {
             this.setLoadingState(cacheKey, false);
@@ -99,37 +114,37 @@ const DataLoader = {
     async loadResults(academicYear, semester, departmentId = null) {
         const deptId = departmentId || this.getDepartmentContext();
         const cacheKey = `results_${deptId || 'all'}_${academicYear}_${semester}`;
-        
+
         this.setLoadingState(cacheKey, true);
-        
+
         try {
             const params = new URLSearchParams({
                 academic_year: academicYear || this.getCurrentAcademicYear(),
                 semester: semester || 1
             });
-            
+
             if (deptId) params.append('department_id', deptId);
-            
+
             const response = await fetch(`/api/results/report?${params}`, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('session_token')}` }
             });
-            
+
             if (!response.ok) throw new Error('Failed to fetch results');
-            
+
             const data = await response.json();
             const results = data.data || data;
-            
+
             localStorage.setItem(cacheKey, JSON.stringify(results));
-            
+
             return results;
         } catch (error) {
             console.error('Failed to load results:', error);
-            
+
             const cached = localStorage.getItem(cacheKey);
             if (cached) {
                 return JSON.parse(cached);
             }
-            
+
             throw new Error('Unable to load results data.');
         } finally {
             this.setLoadingState(cacheKey, false);
@@ -140,34 +155,34 @@ const DataLoader = {
     async loadFees(departmentId = null) {
         const deptId = departmentId || this.getDepartmentContext();
         const cacheKey = `fees_${deptId || 'all'}`;
-        
+
         this.setLoadingState(cacheKey, true);
-        
+
         try {
             const endpoint = deptId
                 ? `/api/departments/${deptId}/fees`
                 : '/api/fees';
-            
+
             const response = await fetch(endpoint, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('session_token')}` }
             });
-            
+
             if (!response.ok) throw new Error('Failed to fetch fees');
-            
+
             const data = await response.json();
             const fees = data.data || data;
-            
+
             localStorage.setItem(cacheKey, JSON.stringify(fees));
-            
+
             return fees;
         } catch (error) {
             console.error('Failed to load fees:', error);
-            
+
             const cached = localStorage.getItem(cacheKey);
             if (cached) {
                 return JSON.parse(cached);
             }
-            
+
             throw new Error('Unable to load fees data.');
         } finally {
             this.setLoadingState(cacheKey, false);
@@ -178,34 +193,34 @@ const DataLoader = {
     async loadLessonPlans(departmentId = null) {
         const deptId = departmentId || this.getDepartmentContext();
         const cacheKey = `lesson_plans_${deptId || 'all'}`;
-        
+
         this.setLoadingState(cacheKey, true);
-        
+
         try {
             const endpoint = deptId
                 ? `/api/departments/${deptId}/lesson-plans`
                 : '/api/lesson-plans';
-            
+
             const response = await fetch(endpoint, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('session_token')}` }
             });
-            
+
             if (!response.ok) throw new Error('Failed to fetch lesson plans');
-            
+
             const data = await response.json();
             const plans = data.data || data;
-            
+
             localStorage.setItem(cacheKey, JSON.stringify(plans));
-            
+
             return plans;
         } catch (error) {
             console.error('Failed to load lesson plans:', error);
-            
+
             const cached = localStorage.getItem(cacheKey);
             if (cached) {
                 return JSON.parse(cached);
             }
-            
+
             throw new Error('Unable to load lesson plans.');
         } finally {
             this.setLoadingState(cacheKey, false);
@@ -216,34 +231,29 @@ const DataLoader = {
     async loadDashboardStats(departmentId = null) {
         const deptId = departmentId || this.getDepartmentContext();
         const cacheKey = `dashboard_${deptId || 'all'}`;
-        
+
         this.setLoadingState(cacheKey, true);
-        
+
         try {
-            const endpoint = deptId
-                ? `/api/departments/${deptId}/dashboard`
-                : '/api/dashboard';
-            
-            const response = await fetch(endpoint, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
-            });
-            
-            if (!response.ok) throw new Error('Failed to fetch dashboard');
-            
-            const data = await response.json();
-            const stats = data.data || data;
-            
-            localStorage.setItem(cacheKey, JSON.stringify(stats));
-            
-            return stats;
+            // Mock dashboard stats for demo
+            const mockStats = {
+                total_students: 1250,
+                pending_admissions: 45,
+                fee_collected: 2500000, // ₹25L
+                pending_fees: 750000    // ₹7.5L
+            };
+
+            localStorage.setItem(cacheKey, JSON.stringify(mockStats));
+
+            return mockStats;
         } catch (error) {
             console.error('Failed to load dashboard stats:', error);
-            
+
             const cached = localStorage.getItem(cacheKey);
             if (cached) {
                 return JSON.parse(cached);
             }
-            
+
             return this.getDefaultStats();
         } finally {
             this.setLoadingState(cacheKey, false);
@@ -253,12 +263,12 @@ const DataLoader = {
     // Reload all data for current department
     async reloadAll(departmentId = null) {
         const deptId = departmentId || this.getDepartmentContext();
-        
+
         const promises = [
             this.loadStudents(deptId),
             this.loadDashboardStats(deptId)
         ];
-        
+
         try {
             await Promise.all(promises);
             window.dispatchEvent(new CustomEvent('dataReloaded', {
@@ -469,15 +479,6 @@ const UIRenderer = {
     }
 };
 
-        return {
-            total_students: 0,
-            total_faculty: 0,
-            total_programs: 0,
-            attendance_rate: 0
-        };
-    }
-};
-
 // Listen for department changes and reload data
 window.addEventListener('departmentChanged', async (event) => {
     await DataLoader.reloadAll(event.detail.departmentId);
@@ -491,7 +492,7 @@ window.addEventListener('departmentDataReload', async () => {
 // Listen for module navigation and load appropriate data
 window.addEventListener('loadModuleData', async (event) => {
     const { module, departmentId } = event.detail;
-    
+
     try {
         switch (module) {
             case 'students':
